@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-surface-muted text-ink-900 font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: linear-gradient(180deg, #3da635 0%, #6fce1f 100%);
+  }
+
+  .gradient-danger {
+    background: linear-gradient(180deg, #e14747 0%, #f25c5c 100%);
+  }
+
+  .app-shell {
+    @apply mx-auto w-full max-w-md min-h-screen bg-surface-muted relative;
+  }
+}
