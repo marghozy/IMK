@@ -83,4 +83,90 @@ class AppTheme {
       dividerColor: AppColors.border,
     );
   }
+
+  static ThemeData get dark {
+    const darkBackground = Color(0xFF15181C);
+    const darkSurface = Color(0xFF1F2329);
+    const darkBorder = Color(0xFF2E333A);
+    const darkInk = Color(0xFFF2F4F7);
+    const darkInkMuted = Color(0xFF9AA3AE);
+
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: darkBackground,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        brightness: Brightness.dark,
+        primary: AppColors.primaryLight,
+        error: AppColors.danger,
+        surface: darkSurface,
+      ),
+      textTheme: TextTheme(
+        displayMedium: AppTextStyles.display.copyWith(color: darkInk),
+        headlineMedium: AppTextStyles.h1.copyWith(color: darkInk),
+        titleLarge: AppTextStyles.h2.copyWith(color: darkInk),
+        bodyMedium: AppTextStyles.body.copyWith(color: darkInk),
+        bodySmall: AppTextStyles.bodyMuted.copyWith(color: darkInkMuted),
+        labelSmall: AppTextStyles.caption.copyWith(color: darkInkMuted),
+      ),
+      cardTheme: CardThemeData(
+        color: darkSurface,
+        elevation: 0,
+        shadowColor: Colors.black.withValues(alpha: 0.4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+        ),
+        margin: EdgeInsets.zero,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          minimumSize: const Size.fromHeight(54),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.full),
+          ),
+          textStyle: AppTextStyles.button,
+          elevation: 0,
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.primaryLight,
+          side: const BorderSide(color: AppColors.primaryLight, width: 1.5),
+          minimumSize: const Size.fromHeight(54),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.full),
+          ),
+          textStyle: AppTextStyles.button.copyWith(color: AppColors.primaryLight),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: darkSurface,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: const BorderSide(color: darkBorder),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: const BorderSide(color: darkBorder),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: const BorderSide(color: AppColors.primaryLight, width: 1.5),
+        ),
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: darkBackground,
+        elevation: 0,
+        foregroundColor: darkInk,
+        titleTextStyle: AppTextStyles.h1.copyWith(color: darkInk),
+      ),
+      dividerColor: darkBorder,
+    );
+  }
 }
