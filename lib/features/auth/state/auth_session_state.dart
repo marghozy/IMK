@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/user.dart';
 import '../../../data/repositories/auth_repository.dart';
-import '../../../data/repositories/local_auth_repository.dart';
+import '../../../data/repositories/firebase_auth_repository.dart';
 import '../../shared/state/user_providers.dart';
 
-final authRepositoryProvider = Provider<AuthRepository>((ref) => LocalAuthRepository());
+final authRepositoryProvider = Provider<AuthRepository>((ref) => FirebaseAuthRepository());
 
 /// Holds the authenticated user (or null if signed out). Register/login
 /// errors surface via [AsyncValue.error] so pages can show them inline.

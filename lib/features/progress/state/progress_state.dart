@@ -3,18 +3,29 @@ import '../../../data/mock/mock_data.dart';
 import '../../../data/models/module.dart';
 import '../../../data/models/progress_data.dart';
 import '../../../data/models/progress_entry.dart';
+import '../../../data/repositories/firebase_progress_repository.dart';
 import '../../../data/repositories/local_progress_repository.dart';
 import '../../../data/repositories/progress_repository.dart';
+import '../../auth/state/auth_session_state.dart';
 import '../../shared/state/user_providers.dart';
 
-final progressRepositoryProvider = Provider<ProgressRepository>((ref) => LocalProgressRepository());
+/// Scoped to the signed-in user's uid so each account's progress is stored
+/// separately in Firestore. Falls back to [LocalProgressRepository] only
+/// while there's no authenticated user yet (e.g. session still restoring),
+/// so the UI never crashes on a null uid.
+final progressRepositoryProvider = Provider<ProgressRepository>((ref) {
+  final authState = ref.watch(authSessionProvider);
+  final uid = authState.valueOrNull?.id;
+  if (uid == null) return LocalProgressRepository();
+  return FirebaseProgressRepository(uid: uid);
+});
 
 /// Centralized, persisted learning progress (lesson completions + quiz
 /// history), shared by Home/Belajar/Quiz/Progress so they all read the same
 /// real data instead of independent mock stats.
 class ProgressNotifier extends AsyncNotifier<ProgressSnapshot> {
   @override
-  Future<ProgressSnapshot> build() => ref.read(progressRepositoryProvider).load();
+  Future<ProgressSnapshot> build() => ref.watch(progressRepositoryProvider).load();
 
   Future<void> completeCard(String moduleId, String cardId) async {
     await ref.read(progressRepositoryProvider).markCardCompleted(moduleId, cardId);

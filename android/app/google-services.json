@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "676266261941",
+    "project_id": "jawalingo-c44ea",
+    "storage_bucket": "jawalingo-c44ea.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:676266261941:android:fc12c892f338ee4aeaedfc",
+        "android_client_info": {
+          "package_name": "com.jawalingo.jawalingo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoikw0XtPakMNczEe8DammzIbSIJHCh24"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
