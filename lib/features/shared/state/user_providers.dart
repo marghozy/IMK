@@ -6,6 +6,14 @@ class UserNotifier extends Notifier<AppUser> {
   @override
   AppUser build() => MockData.user;
 
+  void setUser(AppUser user) {
+    state = user;
+  }
+
+  void setStreakDays(int days) {
+    state = state.copyWith(streakDays: days);
+  }
+
   void setDailyGoal(String goalId) {
     state = state.copyWith(dailyGoalId: goalId);
   }

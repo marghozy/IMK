@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/module.dart';
 import '../models/quiz.dart';
-import '../models/progress_entry.dart';
 import '../models/user.dart';
 
 /// Static, realistic dummy data standing in for a future backend.
@@ -43,7 +42,6 @@ class MockData {
       previewAksara: 'ꦤ',
       color: const Color(0xFFB7E4A0),
       xpReward: 50,
-      completedCards: 12,
       cards: const [
         LessonCard(
           id: 'ng-1',
@@ -101,10 +99,9 @@ class MockData {
       id: 'sandhangan',
       title: 'Sandhangan',
       subtitle: 'Tanda vokal · 8 aturan',
-      previewAksara: 'ꦶ',
+      previewAksara: 'ꦏꦶ',
       color: const Color(0xFFA5D8F0),
       xpReward: 80,
-      completedCards: 2,
       cards: const [
         LessonCard(
           id: 'sd-1',
@@ -167,6 +164,48 @@ class MockData {
   static LearningModule moduleById(String id) => modules.firstWhere((m) => m.id == id);
 
   static final Map<QuizLevel, List<QuizQuestion>> quizBank = {
+    QuizLevel.harian: const [
+      QuizQuestion(
+        id: 'h1',
+        aksara: 'ꦏ',
+        prompt: 'Aksara ini dibaca apa?',
+        options: ['Ka', 'Ha', 'Ra', 'Ta'],
+        correctAnswer: 'Ka',
+        explanation: 'Aksara ꦏ dibaca "Ka".',
+      ),
+      QuizQuestion(
+        id: 'h2',
+        aksara: 'ꦢ',
+        prompt: 'Aksara ini dibaca apa?',
+        options: ['Da', 'Ta', 'Sa', 'Pa'],
+        correctAnswer: 'Da',
+        explanation: 'Aksara ꦢ dibaca "Da".',
+      ),
+      QuizQuestion(
+        id: 'h3',
+        aksara: 'ꦱ',
+        prompt: 'Aksara ini dibaca apa?',
+        options: ['Sa', 'Wa', 'La', 'Pa'],
+        correctAnswer: 'Sa',
+        explanation: 'Aksara ꦱ dibaca "Sa".',
+      ),
+      QuizQuestion(
+        id: 'h4',
+        aksara: 'ꦏꦶ',
+        prompt: 'Bagaimana aksara ini dibaca?',
+        options: ['Ka', 'Ki', 'Ku', 'Ke'],
+        correctAnswer: 'Ki',
+        explanation: 'Sandhangan wulu mengubah vokal bawaan "a" pada ꦏ menjadi "i", sehingga dibaca "Ki".',
+      ),
+      QuizQuestion(
+        id: 'h5',
+        aksara: 'ꦮ',
+        prompt: 'Aksara ini dibaca apa?',
+        options: ['Wa', 'Ya', 'Ba', 'Ga'],
+        correctAnswer: 'Wa',
+        explanation: 'Aksara ꦮ dibaca "Wa".',
+      ),
+    ],
     QuizLevel.pemula: const [
       QuizQuestion(
         id: 'q1',
@@ -367,21 +406,4 @@ class MockData {
       locked: true,
     ),
   ];
-
-  static List<ProgressEntry> last7DaysAccuracy() {
-    final now = DateTime.now();
-    final values = [0.75, 0.88, 0.92, 0.80, 0.85, 0.90, 0.84];
-    return List.generate(7, (i) {
-      final date = now.subtract(Duration(days: 6 - i));
-      return ProgressEntry(date: date, accuracy: values[i], active: true);
-    });
-  }
-
-  static Set<int> activeStreakDaysInMonth(DateTime month) {
-    return {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-  }
-
-  static const totalLessonsCompleted = 24;
-  static const totalQuizzesCompleted = 12;
-  static const overallAccuracy = 0.84;
 }

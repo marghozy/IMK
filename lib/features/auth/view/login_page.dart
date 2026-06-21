@@ -5,6 +5,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/app_button.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../state/auth_session_state.dart';
 import '../state/auth_state.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -15,8 +17,9 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  final _emailController = TextEditingController(text: 'thariq@example.com');
-  final _passwordController = TextEditingController(text: 'rahasia123');
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -25,9 +28,30 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     super.dispose();
   }
 
+  Future<void> _submit() async {
+    setState(() => _errorMessage = null);
+
+    await ref.read(authSessionProvider.notifier).login(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+
+    final result = ref.read(authSessionProvider);
+    if (!mounted) return;
+
+    if (result.hasError) {
+      final error = result.error;
+      setState(() => _errorMessage = error is AuthException ? error.message : 'Gagal masuk. Coba lagi.');
+      return;
+    }
+
+    context.go('/home');
+  }
+
   @override
   Widget build(BuildContext context) {
     final obscure = !ref.watch(loginPasswordVisibleProvider);
+    final isLoading = ref.watch(authSessionProvider).isLoading;
 
     return Scaffold(
       body: SafeArea(
@@ -52,7 +76,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text('Selamat Datang', style: AppTextStyles.h1, textAlign: TextAlign.center),
+              SizedBox(
+                width: double.infinity,
+                child: Text('Selamat Datang', style: AppTextStyles.h1, textAlign: TextAlign.center),
+              ),
               const SizedBox(height: AppSpacing.xs),
               Center(child: Text('Masuk untuk lanjut belajar Aksara Jawa', style: AppTextStyles.bodyMuted)),
               const SizedBox(height: AppSpacing.xl),
@@ -80,8 +107,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   child: Text('Lupa kata sandi?', style: AppTextStyles.caption.copyWith(color: AppColors.primary, fontWeight: FontWeight.w700)),
                 ),
               ),
+              if (_errorMessage != null) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Text(_errorMessage!, style: AppTextStyles.caption.copyWith(color: AppColors.danger)),
+              ],
               const SizedBox(height: AppSpacing.md),
-              AppButton(label: 'MASUK', onPressed: () => context.go('/home')),
+              AppButton(label: 'MASUK', loading: isLoading, onPressed: _submit),
               const SizedBox(height: AppSpacing.lg),
               Row(
                 children: [
@@ -98,14 +129,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => context.go('/home'),
+                      onPressed: () => context.push('/coming-soon', extra: 'Masuk dengan Google'),
                       child: const Text('Google'),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () => context.go('/home'),
+                      onPressed: () => context.push('/coming-soon', extra: 'Masuk dengan Apple'),
                       icon: const Icon(Icons.apple, size: 20),
                       label: const Text('Apple'),
                     ),

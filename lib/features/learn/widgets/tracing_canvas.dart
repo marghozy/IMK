@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
 class TracingCanvas extends StatefulWidget {
-  const TracingCanvas({super.key});
+  final VoidCallback? onStrokeChanged;
+
+  const TracingCanvas({super.key, this.onStrokeChanged});
 
   @override
   State<TracingCanvas> createState() => TracingCanvasState();
@@ -11,10 +13,16 @@ class TracingCanvas extends StatefulWidget {
 class TracingCanvasState extends State<TracingCanvas> {
   final List<List<Offset>> _strokes = [];
 
-  void clear() => setState(() => _strokes.clear());
+  bool get hasStrokes => _strokes.isNotEmpty;
+
+  void clear() {
+    setState(() => _strokes.clear());
+    widget.onStrokeChanged?.call();
+  }
 
   void _onPanStart(DragStartDetails details) {
     setState(() => _strokes.add([details.localPosition]));
+    widget.onStrokeChanged?.call();
   }
 
   void _onPanUpdate(DragUpdateDetails details) {

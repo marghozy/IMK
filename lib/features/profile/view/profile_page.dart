@@ -91,7 +91,13 @@ class ProfilePage extends ConsumerWidget {
                     title: 'Notifikasi',
                     subtitle: 'Ingatkan waktu belajar',
                     value: user.notificationsEnabled,
-                    onChanged: (v) => ref.read(userProvider.notifier).toggleNotifications(v),
+                    onChanged: (v) {
+                      if (v) {
+                        context.push('/coming-soon', extra: 'Notifikasi');
+                        return;
+                      }
+                      ref.read(userProvider.notifier).toggleNotifications(v);
+                    },
                   ),
                   _ToggleRow(
                     icon: Icons.dark_mode_rounded,
@@ -109,15 +115,27 @@ class ProfilePage extends ConsumerWidget {
                     icon: Icons.music_note_rounded,
                     title: 'Musik Latar',
                     value: user.musicEnabled,
-                    onChanged: (v) => ref.read(userProvider.notifier).toggleMusic(v),
+                    onChanged: (v) {
+                      if (v) {
+                        context.push('/coming-soon', extra: 'Musik Latar');
+                        return;
+                      }
+                      ref.read(userProvider.notifier).toggleMusic(v);
+                    },
                   ),
                   _ToggleRow(
                     icon: Icons.volume_up_rounded,
                     title: 'Efek Suara',
                     value: user.sfxEnabled,
-                    onChanged: (v) => ref.read(userProvider.notifier).toggleSfx(v),
+                    onChanged: (v) {
+                      if (v) {
+                        context.push('/coming-soon', extra: 'Efek Suara');
+                        return;
+                      }
+                      ref.read(userProvider.notifier).toggleSfx(v);
+                    },
                   ),
-                  _LinkRow(icon: Icons.volume_down_rounded, title: 'Volume', onTap: () => _showVolumeSheet(context, ref, user)),
+                  _LinkRow(icon: Icons.volume_down_rounded, title: 'Volume', onTap: () => context.push('/coming-soon', extra: 'Volume')),
                   const SizedBox(height: AppSpacing.xl),
                   const SectionLabel(icon: Icons.info_rounded, text: 'TENTANG'),
                   const SizedBox(height: AppSpacing.md),
@@ -149,31 +167,6 @@ class ProfilePage extends ConsumerWidget {
         onLogout: () {
           Navigator.pop(ctx);
           context.go('/');
-        },
-      ),
-    );
-  }
-
-  void _showVolumeSheet(BuildContext context, WidgetRef ref, AppUser user) {
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) => Consumer(
-        builder: (ctx, ref, _) {
-          final current = ref.watch(userProvider).volume;
-          return Padding(
-            padding: const EdgeInsets.all(AppSpacing.xl),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Volume', style: AppTextStyles.h2),
-                Slider(
-                  value: current,
-                  activeColor: AppColors.primary,
-                  onChanged: (v) => ref.read(userProvider.notifier).setVolume(v),
-                ),
-              ],
-            ),
-          );
         },
       ),
     );

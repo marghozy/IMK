@@ -1,4 +1,4 @@
-enum QuizLevel { pemula, menengah, tantanganWaktu, master }
+enum QuizLevel { harian, pemula, menengah, tantanganWaktu, master }
 
 class QuizLevelInfo {
   final QuizLevel level;

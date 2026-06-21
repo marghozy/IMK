@@ -56,7 +56,7 @@ class QuizLevelPage extends ConsumerWidget {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () => context.push('/quiz/pemula/start'),
+                      onPressed: () => context.push('/quiz/harian/start'),
                       style: ElevatedButton.styleFrom(minimumSize: const Size(90, 44)),
                       child: const Text('MULAI'),
                     ),
@@ -87,12 +87,14 @@ class _LevelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final icon = switch (info.level) {
+      QuizLevel.harian => Icons.gps_fixed_rounded,
       QuizLevel.pemula => Icons.eco_rounded,
       QuizLevel.menengah => Icons.energy_savings_leaf_rounded,
       QuizLevel.tantanganWaktu => Icons.bolt_rounded,
       QuizLevel.master => Icons.workspace_premium_rounded,
     };
     final color = switch (info.level) {
+      QuizLevel.harian => AppColors.primaryDark,
       QuizLevel.pemula => AppColors.primary,
       QuizLevel.menengah => AppColors.accentBlue,
       QuizLevel.tantanganWaktu => AppColors.accentOrange,

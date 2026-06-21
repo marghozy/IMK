@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../data/mock/mock_data.dart';
+import '../../progress/state/progress_state.dart';
 import '../widgets/tracing_canvas.dart';
 
-class WritingPracticePage extends StatefulWidget {
+class WritingPracticePage extends ConsumerStatefulWidget {
   final String moduleId;
   final String cardId;
 
   const WritingPracticePage({super.key, required this.moduleId, required this.cardId});
 
   @override
-  State<WritingPracticePage> createState() => _WritingPracticePageState();
+  ConsumerState<WritingPracticePage> createState() => _WritingPracticePageState();
 }
 
-class _WritingPracticePageState extends State<WritingPracticePage> {
+class _WritingPracticePageState extends ConsumerState<WritingPracticePage> {
   final _canvasKey = GlobalKey<TracingCanvasState>();
 
   @override
@@ -56,7 +58,7 @@ class _WritingPracticePageState extends State<WritingPracticePage> {
                           child: Text(card.aksara, style: AppTextStyles.aksara(size: 160)),
                         ),
                       ),
-                      TracingCanvas(key: _canvasKey),
+                      TracingCanvas(key: _canvasKey, onStrokeChanged: () => setState(() {})),
                     ],
                   ),
                 ),
@@ -76,7 +78,14 @@ class _WritingPracticePageState extends State<WritingPracticePage> {
                   Expanded(
                     child: AppButton(
                       label: 'Selesai',
-                      onPressed: () => context.go('/learn'),
+                      onPressed: (_canvasKey.currentState?.hasStrokes ?? false)
+                          ? () {
+                              ref.read(progressProvider.notifier).completeCard(widget.moduleId, widget.cardId);
+                              context.go('/learn');
+                            }
+                          : () => ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Coba tulis dulu sebelum lanjut')),
+                              ),
                     ),
                   ),
                 ],

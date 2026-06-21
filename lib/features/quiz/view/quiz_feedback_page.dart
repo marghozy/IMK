@@ -6,6 +6,8 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/section_label.dart';
+import '../../../data/models/progress_data.dart';
+import '../../progress/state/progress_state.dart';
 import '../../shared/state/user_providers.dart';
 import '../state/quiz_session_state.dart';
 
@@ -23,7 +25,7 @@ class QuizFeedbackPage extends ConsumerWidget {
     }
     final result = session.answers.last;
     final isCorrect = result.isCorrect;
-    final outOfLives = session.lives <= 0;
+    final outOfLives = session.forcedAdvance;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -74,7 +76,7 @@ class QuizFeedbackPage extends ConsumerWidget {
                     ),
                     child: Column(
                       children: [
-                        Text('+50', style: AppTextStyles.h1.copyWith(color: AppColors.primary)),
+                        Text('+${xpForAttempt(result.attemptNumber)}', style: AppTextStyles.h1.copyWith(color: AppColors.primary)),
                         Text('XP', style: AppTextStyles.caption),
                       ],
                     ),
@@ -135,12 +137,22 @@ class QuizFeedbackPage extends ConsumerWidget {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(color: AppColors.accentYellow.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppRadius.md)),
+                  decoration: BoxDecoration(
+                    color: (outOfLives ? AppColors.danger : AppColors.accentYellow).withValues(alpha: outOfLives ? 0.12 : 0.3),
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                  ),
                   child: Row(
                     children: [
                       const Icon(Icons.favorite_rounded, size: 18, color: AppColors.danger),
                       const SizedBox(width: 6),
-                      Text('Sisa nyawa: ${session.lives} dari 3', style: AppTextStyles.bodyMuted.copyWith(fontWeight: FontWeight.w700)),
+                      Expanded(
+                        child: Text(
+                          outOfLives
+                              ? 'Nyawa untuk soal ini habis. Lanjut otomatis ke soal berikutnya.'
+                              : 'Sisa nyawa: ${session.lives} dari 3',
+                          style: AppTextStyles.bodyMuted.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -151,16 +163,20 @@ class QuizFeedbackPage extends ConsumerWidget {
                   label: session.isLastQuestion ? 'Lihat Hasil' : 'Lanjut ke Soal Berikutnya',
                   onPressed: () => _goNext(context, ref, session),
                 )
+              else if (outOfLives)
+                AppButton(
+                  label: session.isLastQuestion ? 'Lihat Hasil' : 'Lanjut ke Soal Berikutnya',
+                  variant: AppButtonVariant.danger,
+                  onPressed: () => _goNext(context, ref, session),
+                )
               else ...[
                 AppButton(
                   label: 'Coba Lagi',
                   variant: AppButtonVariant.danger,
-                  onPressed: outOfLives
-                      ? null
-                      : () {
-                          ref.read(quizSessionProvider.notifier).retryCurrentQuestion();
-                          context.pop();
-                        },
+                  onPressed: () {
+                    ref.read(quizSessionProvider.notifier).retryCurrentQuestion();
+                    context.pop();
+                  },
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 AppButton(
@@ -177,8 +193,15 @@ class QuizFeedbackPage extends ConsumerWidget {
   }
 
   void _goNext(BuildContext context, WidgetRef ref, QuizSessionState session) {
-    if (session.isLastQuestion || session.lives <= 0) {
+    if (session.isLastQuestion) {
       ref.read(userProvider.notifier).addXp(session.xpEarned);
+      ref.read(progressProvider.notifier).recordQuiz(QuizHistoryEntry(
+            level: session.level.name,
+            correctCount: session.correctCount,
+            totalCount: session.answers.length,
+            xpEarned: session.xpEarned,
+            completedAt: DateTime.now(),
+          ));
       context.go('/quiz/$levelId/result');
     } else {
       ref.read(quizSessionProvider.notifier).nextQuestion();

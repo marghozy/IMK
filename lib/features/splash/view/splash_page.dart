@@ -12,13 +12,7 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: AppColors.primaryGradient,
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        color: AppColors.surface,
         child: Stack(
           children: [
             const _AksaraBackdrop(),
@@ -35,7 +29,7 @@ class SplashPage extends StatelessWidget {
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        style: AppTextStyles.display.copyWith(color: Colors.white),
+                        style: AppTextStyles.display.copyWith(color: AppColors.ink),
                         children: [
                           const TextSpan(text: 'Halo,\naku '),
                           TextSpan(
@@ -50,7 +44,7 @@ class SplashPage extends StatelessWidget {
                       'Ayo belajar Aksara Jawa\nbareng gratis & menyenangkan!',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.body
-                          .copyWith(color: Colors.white.withValues(alpha: 0.9)),
+                          .copyWith(color: AppColors.ink.withValues(alpha: 0.85)),
                     ),
                     const Spacer(),
                     AppButton(
@@ -59,21 +53,26 @@ class SplashPage extends StatelessWidget {
                       onPressed: () => context.go('/onboarding'),
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    OutlinedButton(
+                    ElevatedButton(
                       onPressed: () => context.go('/login'),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.white, width: 1.5),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: AppColors.ink,
+                        elevation: 0,
                         minimumSize: const Size.fromHeight(54),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                        ),
                       ),
                       child: Text('SUDAH PUNYA AKUN',
-                          style: AppTextStyles.button.copyWith(color: Colors.white)),
+                          style: AppTextStyles.button.copyWith(color: AppColors.ink)),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
                       'Dengan melanjutkan, kamu setuju dengan Syarat & Privasi',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.caption
-                          .copyWith(color: Colors.white.withValues(alpha: 0.85)),
+                          .copyWith(color: AppColors.ink.withValues(alpha: 0.6)),
                     ),
                   ],
                 ),
@@ -96,16 +95,16 @@ class _LogoHeader extends StatelessWidget {
           width: 28,
           height: 28,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.primary,
             borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
           child: const Icon(Icons.menu_book_rounded,
-              size: 18, color: AppColors.primary),
+              size: 18, color: Colors.white),
         ),
         const SizedBox(width: AppSpacing.sm),
         Text(
           'JAWALINGO',
-          style: AppTextStyles.h2.copyWith(color: Colors.white, letterSpacing: 2),
+          style: AppTextStyles.h2.copyWith(color: AppColors.ink, letterSpacing: 2),
         ),
       ],
     );
@@ -137,13 +136,22 @@ class _AksaraBackdrop extends StatelessWidget {
         double angle,
         Color? color
       })> _glyphs = [
-    (glyph: 'ꦩꦤ', align: Alignment(-0.62, -0.8), size: 30, angle: -0.22, color: null),
-    (glyph: 'ꦤ', align: Alignment(0.5, -0.62), size: 30, angle: 0.28, color: null),
-    (glyph: 'ꦤ', align: Alignment(0.62, -0.34), size: 34, angle: 0.3, color: AppColors.accentYellow),
-    (glyph: 'ꦤ', align: Alignment(-0.55, -0.18), size: 30, angle: -0.18, color: null),
-    (glyph: 'ꦭ', align: Alignment(-0.92, -0.08), size: 34, angle: 0.2, color: null),
-    (glyph: 'ꦟ', align: Alignment(0.82, 0.12), size: 32, angle: -0.32, color: null),
-    (glyph: 'ꦤꦏ', align: Alignment(-0.6, 0.46), size: 30, angle: 0.16, color: null),
+    (glyph: 'ꦩꦤ', align: Alignment(-0.92, -0.92), size: 28, angle: -0.22, color: null),
+    (glyph: 'ꦤ', align: Alignment(0.88, -0.94), size: 26, angle: 0.28, color: null),
+    (glyph: 'ꦤ', align: Alignment(0.94, -0.7), size: 30, angle: 0.3, color: null),
+    (glyph: 'ꦤ', align: Alignment(-0.94, -0.7), size: 26, angle: -0.18, color: null),
+    (glyph: 'ꦭ', align: Alignment(-0.97, -0.42), size: 30, angle: 0.2, color: null),
+    (glyph: 'ꦟ', align: Alignment(0.95, -0.42), size: 28, angle: -0.32, color: null),
+    (glyph: 'ꦤꦏ', align: Alignment(-0.95, -0.14), size: 26, angle: 0.16, color: null),
+    (glyph: 'ꦱ', align: Alignment(0.96, -0.14), size: 28, angle: -0.2, color: null),
+    (glyph: 'ꦢ', align: Alignment(-0.94, 0.14), size: 26, angle: 0.24, color: null),
+    (glyph: 'ꦮ', align: Alignment(0.95, 0.14), size: 30, angle: -0.18, color: null),
+    (glyph: 'ꦕ', align: Alignment(-0.92, 0.42), size: 28, angle: -0.16, color: null),
+    (glyph: 'ꦫ', align: Alignment(0.92, 0.42), size: 26, angle: 0.22, color: null),
+    (glyph: 'ꦏ', align: Alignment(-0.9, 0.9), size: 30, angle: 0.18, color: null),
+    (glyph: 'ꦱ', align: Alignment(0.9, 0.9), size: 26, angle: -0.24, color: null),
+    (glyph: 'ꦲ', align: Alignment(-0.42, -0.96), size: 24, angle: -0.14, color: null),
+    (glyph: 'ꦤ', align: Alignment(0.42, -0.96), size: 24, angle: 0.14, color: null),
   ];
 
   @override
@@ -160,7 +168,7 @@ class _AksaraBackdrop extends StatelessWidget {
                   g.glyph,
                   style: AppTextStyles.aksara(
                     size: g.size,
-                    color: g.color ?? Colors.white.withValues(alpha: 0.85),
+                    color: g.color ?? AppColors.primary.withValues(alpha: 0.12),
                   ),
                 ),
               ),
