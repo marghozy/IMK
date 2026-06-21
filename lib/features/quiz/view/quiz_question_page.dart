@@ -104,7 +104,14 @@ class _QuizQuestionPageState extends ConsumerState<QuizQuestionPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 4),
                     decoration: BoxDecoration(color: AppColors.danger.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppRadius.full)),
-                    child: Text('❤️ ${session.lives}', style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w800)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.favorite_rounded, size: 14, color: AppColors.danger),
+                        const SizedBox(width: 4),
+                        Text('${session.lives}', style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w800)),
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -1,7 +1,6 @@
 # JawaLingo (Flutter)
 
-Aplikasi mobile belajar Aksara Jawa — dibangun dengan Flutter, mengikuti pola
-Duolingo (lesson card, quiz, streak, XP). Implementasi ini mencakup scope
+Aplikasi mobile belajar Aksara Jawa — dibangun dengan Flutter. Implementasi ini mencakup scope
 **Tim A** sesuai prototype Figma.
 
 ## Tech Stack
@@ -37,6 +36,3 @@ lib/
 Tujuan Harian, Home, Belajar/Lobi, Materi Pembelajaran, Latihan Menulis
 Aksara, Kuis (pilih level, soal, feedback, hasil), Progress Dashboard,
 Profile.
-
-**Tim B (stub "Segera Hadir", tidak dibangun penuh):** Lupa Kata Sandi,
-verifikasi OTP, varian desain Login/Register alternatif.

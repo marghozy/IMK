@@ -69,8 +69,9 @@ class LoadingView extends StatelessWidget {
 
 class LoadingInfoPill extends StatelessWidget {
   final String label;
+  final IconData? icon;
 
-  const LoadingInfoPill({super.key, required this.label});
+  const LoadingInfoPill({super.key, required this.label, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +81,16 @@ class LoadingInfoPill extends StatelessWidget {
         color: Colors.white.withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(AppRadius.full),
       ),
-      child: Text(label, style: AppTextStyles.caption.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 15, color: Colors.white),
+            const SizedBox(width: 6),
+          ],
+          Text(label, style: AppTextStyles.caption.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+        ],
+      ),
     );
   }
 }

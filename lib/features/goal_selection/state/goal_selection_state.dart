@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SelectedGoalNotifier extends Notifier<String> {
   @override
-  String build() => 'reguler';
+  String build() => '';
 
   void select(String goalId) => state = goalId;
 }

@@ -6,6 +6,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/progress_bar.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/xp_badge.dart';
 import '../../../data/mock/mock_data.dart';
 import '../../shared/state/user_providers.dart';
@@ -98,7 +99,10 @@ class HomePage extends ConsumerWidget {
                           shape: BoxShape.circle,
                         ),
                         alignment: Alignment.center,
-                        child: Text(active ? '🔥' : '', style: const TextStyle(fontSize: 16)),
+                        child: active
+                            ? const Icon(Icons.local_fire_department_rounded,
+                                size: 20, color: Colors.white)
+                            : null,
                       );
                     }),
                   ),
@@ -129,7 +133,7 @@ class HomePage extends ConsumerWidget {
                     onPressed: () => context.push('/learn/${lastLesson.moduleId}/${lastLesson.cardId}'),
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  Text('📚 RECOMMENDED', style: AppTextStyles.labelUppercase),
+                  const SectionLabel(icon: Icons.menu_book_rounded, text: 'RECOMMENDED'),
                   const SizedBox(height: AppSpacing.md),
                   ...MockData.modules.take(3).map(
                         (m) => Padding(

@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 class AppUser {
   final String id;
   final String name;
@@ -66,22 +68,28 @@ class AppUser {
 class DailyGoal {
   final String id;
   final String label;
+  final String subtitle;
   final int xpTarget;
 
-  const DailyGoal({required this.id, required this.label, required this.xpTarget});
+  const DailyGoal({
+    required this.id,
+    required this.label,
+    required this.subtitle,
+    required this.xpTarget,
+  });
 }
 
 class AppBadge {
   final String id;
   final String title;
-  final String emoji;
+  final IconData icon;
   final String earnedOn;
   final bool locked;
 
   const AppBadge({
     required this.id,
     required this.title,
-    required this.emoji,
+    required this.icon,
     required this.earnedOn,
     this.locked = false,
   });

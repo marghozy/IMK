@@ -20,7 +20,7 @@ class XpBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('⚡', style: TextStyle(fontSize: 14)),
+          const Icon(Icons.bolt_rounded, size: 15, color: Colors.white),
           const SizedBox(width: AppSpacing.xs),
           Text('$xp XP', style: AppTextStyles.caption.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
         ],
@@ -45,7 +45,7 @@ class StreakPill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('🔥', style: TextStyle(fontSize: 14)),
+          const Icon(Icons.local_fire_department_rounded, size: 15, color: AppColors.ink),
           const SizedBox(width: AppSpacing.xs),
           Text('$days', style: AppTextStyles.caption.copyWith(color: AppColors.ink, fontWeight: FontWeight.w800)),
         ],

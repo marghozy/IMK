@@ -48,7 +48,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   height: 90,
                   decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(AppRadius.lg)),
                   alignment: Alignment.center,
-                  child: const Text('📜', style: TextStyle(fontSize: 40)),
+                  child: const Icon(Icons.auto_stories_rounded, size: 44, color: Colors.white),
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
@@ -104,9 +104,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
-                    child: OutlinedButton(
+                    child: OutlinedButton.icon(
                       onPressed: () => context.go('/home'),
-                      child: const Text('🍎 Apple'),
+                      icon: const Icon(Icons.apple, size: 20),
+                      label: const Text('Apple'),
                     ),
                   ),
                 ],

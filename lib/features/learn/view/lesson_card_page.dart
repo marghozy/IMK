@@ -158,7 +158,8 @@ class _LessonCardPageState extends ConsumerState<LessonCardPage> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('💡 ', style: TextStyle(fontSize: 16)),
+                                const Icon(Icons.lightbulb_rounded, size: 18, color: AppColors.accentOrange),
+                                const SizedBox(width: 6),
                                 Expanded(child: Text(card.tip!, style: AppTextStyles.bodyMuted)),
                               ],
                             ),
@@ -176,7 +177,8 @@ class _LessonCardPageState extends ConsumerState<LessonCardPage> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('⚠️ ', style: TextStyle(fontSize: 16)),
+                                const Icon(Icons.warning_amber_rounded, size: 18, color: AppColors.accentOrange),
+                                const SizedBox(width: 6),
                                 Expanded(child: Text(card.warning!, style: AppTextStyles.bodyMuted)),
                               ],
                             ),
