@@ -6,6 +6,10 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/app_button.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../../goal_selection/state/goal_selection_state.dart';
+import '../../shared/state/user_providers.dart';
+import '../state/auth_session_state.dart';
 import '../state/auth_state.dart';
 
 class RegisterPage extends ConsumerStatefulWidget {
@@ -16,10 +20,11 @@ class RegisterPage extends ConsumerStatefulWidget {
 }
 
 class _RegisterPageState extends ConsumerState<RegisterPage> {
-  final _nameController = TextEditingController(text: 'Thariq Habibi');
-  final _emailController = TextEditingController(text: 'thariq@example.com');
-  final _passwordController = TextEditingController(text: 'rahasia123');
-  final _confirmController = TextEditingController(text: 'rahasia123');
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -30,11 +35,52 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     super.dispose();
   }
 
+  String? _validate() {
+    if (_nameController.text.trim().isEmpty) return 'Nama tidak boleh kosong.';
+    final email = _emailController.text.trim();
+    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+    if (!emailRegex.hasMatch(email)) return 'Format email tidak valid.';
+    if (_passwordController.text.length < 6) return 'Kata sandi minimal 6 karakter.';
+    if (_passwordController.text != _confirmController.text) return 'Konfirmasi kata sandi tidak sama.';
+    return null;
+  }
+
+  Future<void> _submit() async {
+    final validationError = _validate();
+    if (validationError != null) {
+      setState(() => _errorMessage = validationError);
+      return;
+    }
+    setState(() => _errorMessage = null);
+
+    await ref.read(authSessionProvider.notifier).register(
+          name: _nameController.text,
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+
+    final result = ref.read(authSessionProvider);
+    if (!mounted) return;
+
+    if (result.hasError) {
+      final error = result.error;
+      setState(() => _errorMessage = error is AuthException ? error.message : 'Gagal mendaftar. Coba lagi.');
+      return;
+    }
+
+    final goalId = ref.read(selectedGoalProvider);
+    if (goalId.isNotEmpty) {
+      ref.read(userProvider.notifier).setDailyGoal(goalId);
+    }
+    context.go('/home');
+  }
+
   @override
   Widget build(BuildContext context) {
     final obscurePw = !ref.watch(registerPasswordVisibleProvider);
     final obscureConfirm = !ref.watch(registerConfirmVisibleProvider);
     final termsAccepted = ref.watch(termsAcceptedProvider);
+    final isLoading = ref.watch(authSessionProvider).isLoading;
 
     return Scaffold(
       body: SafeArea(
@@ -142,10 +188,15 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   ),
                 ),
               ),
+              if (_errorMessage != null) ...[
+                const SizedBox(height: AppSpacing.md),
+                Text(_errorMessage!, style: AppTextStyles.caption.copyWith(color: AppColors.danger)),
+              ],
               const SizedBox(height: AppSpacing.lg),
               AppButton(
                 label: 'DAFTAR SEKARANG',
-                onPressed: termsAccepted ? () => context.go('/home') : null,
+                loading: isLoading,
+                onPressed: termsAccepted ? _submit : null,
               ),
               const SizedBox(height: AppSpacing.lg),
               Center(
