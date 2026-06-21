@@ -9,19 +9,19 @@ class MockData {
   MockData._();
 
   static const dailyGoals = [
-    DailyGoal(id: 'santai', label: 'Santai', xpTarget: 50),
-    DailyGoal(id: 'reguler', label: 'Reguler', xpTarget: 100),
-    DailyGoal(id: 'serius', label: 'Serius', xpTarget: 200),
-    DailyGoal(id: 'intensif', label: 'Intensif', xpTarget: 300),
+    DailyGoal(id: 'santai', label: 'Santai', subtitle: '5 menit / hari', xpTarget: 50),
+    DailyGoal(id: 'reguler', label: 'Reguler', subtitle: '10 menit / hari', xpTarget: 100),
+    DailyGoal(id: 'serius', label: 'Serius', subtitle: '20 menit / hari', xpTarget: 200),
+    DailyGoal(id: 'intensif', label: 'Intensif', subtitle: '30 menit / hari', xpTarget: 300),
   ];
 
   static const badges = [
-    AppBadge(id: 'pemula', title: 'Pemula', emoji: '🚀', earnedOn: '1 Mei 2026'),
-    AppBadge(id: 'streak7', title: '7 Hari', emoji: '🔥', earnedOn: '7 Mei 2026'),
-    AppBadge(id: 'akurat', title: 'Akurat', emoji: '🎯', earnedOn: '5 Mei 2026'),
-    AppBadge(id: 'master', title: 'Master', emoji: '👑', earnedOn: 'Lvl 10', locked: true),
-    AppBadge(id: 'perfek', title: 'Perfek', emoji: '💎', earnedOn: '100%', locked: true),
-    AppBadge(id: 'kilat', title: 'Kilat', emoji: '⚡', earnedOn: '15 Hari', locked: true),
+    AppBadge(id: 'pemula', title: 'Pemula', icon: Icons.rocket_launch_rounded, earnedOn: '1 Mei 2026'),
+    AppBadge(id: 'streak7', title: '7 Hari', icon: Icons.local_fire_department_rounded, earnedOn: '7 Mei 2026'),
+    AppBadge(id: 'akurat', title: 'Akurat', icon: Icons.gps_fixed_rounded, earnedOn: '5 Mei 2026'),
+    AppBadge(id: 'master', title: 'Master', icon: Icons.workspace_premium_rounded, earnedOn: 'Lvl 10', locked: true),
+    AppBadge(id: 'perfek', title: 'Perfek', icon: Icons.diamond_rounded, earnedOn: '100%', locked: true),
+    AppBadge(id: 'kilat', title: 'Kilat', icon: Icons.bolt_rounded, earnedOn: '15 Hari', locked: true),
   ];
 
   static AppUser user = const AppUser(

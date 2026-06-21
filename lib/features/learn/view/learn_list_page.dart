@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/progress_bar.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/xp_badge.dart';
 import '../../../data/mock/mock_data.dart';
 import '../../../data/models/module.dart';
@@ -65,7 +66,7 @@ class LearnListPage extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.xl),
-            Text('📚 SEMUA MATERI', style: AppTextStyles.labelUppercase),
+            const SectionLabel(icon: Icons.menu_book_rounded, text: 'SEMUA MATERI'),
             const SizedBox(height: AppSpacing.md),
             ...MockData.modules.map((m) => _ModuleCard(module: m)),
           ],

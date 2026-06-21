@@ -49,7 +49,7 @@ class QuizResultPage extends ConsumerWidget {
                 ),
                 child: Column(
                   children: [
-                    const Text('🏆', style: TextStyle(fontSize: 48)),
+                    const Icon(Icons.emoji_events_rounded, size: 52, color: Colors.white),
                     const SizedBox(height: AppSpacing.sm),
                     Text('Bagus Sekali!', style: AppTextStyles.h1.copyWith(color: Colors.white)),
                     const SizedBox(height: AppSpacing.md),
@@ -77,10 +77,10 @@ class QuizResultPage extends ConsumerWidget {
                       crossAxisSpacing: AppSpacing.md,
                       childAspectRatio: 1.6,
                       children: [
-                        _StatCard(emoji: '🎯', value: '$accuracy%', label: 'AKURASI'),
-                        _StatCard(emoji: '⚡', value: '+${session.xpEarned}', label: 'XP DIDAPAT'),
-                        _StatCard(emoji: '⏱', value: '$minutes:${seconds.toString().padLeft(2, '0')}', label: 'WAKTU TEMPUH'),
-                        _StatCard(emoji: '🔥', value: '${user.streakDays}', label: 'STREAK AKTIF'),
+                        _StatCard(icon: Icons.gps_fixed_rounded, color: AppColors.primary, value: '$accuracy%', label: 'AKURASI'),
+                        _StatCard(icon: Icons.bolt_rounded, color: AppColors.accentYellow, value: '+${session.xpEarned}', label: 'XP DIDAPAT'),
+                        _StatCard(icon: Icons.timer_rounded, color: AppColors.accentBlue, value: '$minutes:${seconds.toString().padLeft(2, '0')}', label: 'WAKTU TEMPUH'),
+                        _StatCard(icon: Icons.local_fire_department_rounded, color: AppColors.accentOrange, value: '${user.streakDays}', label: 'STREAK AKTIF'),
                       ],
                     ),
                     if (wrong > 0) ...[
@@ -96,7 +96,13 @@ class QuizResultPage extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('❌ $wrong Jawaban Salah', style: AppTextStyles.h2.copyWith(color: AppColors.danger)),
+                            Row(
+                              children: [
+                                const Icon(Icons.cancel_rounded, size: 18, color: AppColors.danger),
+                                const SizedBox(width: 6),
+                                Text('$wrong Jawaban Salah', style: AppTextStyles.h2.copyWith(color: AppColors.danger)),
+                              ],
+                            ),
                             const SizedBox(height: AppSpacing.sm),
                             ...wrongAnswers.asMap().entries.map((e) {
                               final i = e.key + 1;
@@ -133,7 +139,8 @@ class QuizResultPage extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: AppButton(
-                            label: '🏠 Kembali',
+                            label: 'Kembali',
+                            icon: Icons.home_rounded,
                             variant: AppButtonVariant.outline,
                             onPressed: () {
                               ref.read(quizSessionProvider.notifier).reset();
@@ -144,7 +151,8 @@ class QuizResultPage extends ConsumerWidget {
                         const SizedBox(width: AppSpacing.md),
                         Expanded(
                           child: AppButton(
-                            label: '📖 Tinjau',
+                            label: 'Tinjau',
+                            icon: Icons.menu_book_rounded,
                             onPressed: () {
                               ref.read(quizSessionProvider.notifier).reset();
                               context.go('/quiz');
@@ -179,11 +187,12 @@ class _Pill extends StatelessWidget {
 }
 
 class _StatCard extends StatelessWidget {
-  final String emoji;
+  final IconData icon;
+  final Color color;
   final String value;
   final String label;
 
-  const _StatCard({required this.emoji, required this.value, required this.label});
+  const _StatCard({required this.icon, required this.color, required this.value, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +202,7 @@ class _StatCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 22)),
+            Icon(icon, size: 24, color: color),
             Text(value, style: AppTextStyles.h2),
             Text(label, style: AppTextStyles.caption),
           ],

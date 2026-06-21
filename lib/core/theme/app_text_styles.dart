@@ -5,6 +5,8 @@ import 'app_colors.dart';
 class AppTextStyles {
   AppTextStyles._();
 
+  /// System colour-emoji fonts, listed per platform. Flutter resolves whichever
+  /// exists on the running OS, so emoji render instead of showing as tofu (□/?).
   static TextStyle get _base => GoogleFonts.baloo2(color: AppColors.ink);
 
   static TextStyle get display => _base.copyWith(fontSize: 28, fontWeight: FontWeight.w700);

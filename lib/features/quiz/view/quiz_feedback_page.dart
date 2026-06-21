@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/app_button.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../shared/state/user_providers.dart';
 import '../state/quiz_session_state.dart';
 
@@ -109,7 +110,7 @@ class QuizFeedbackPage extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('💡 PENJELASAN', style: AppTextStyles.labelUppercase),
+                    const SectionLabel(icon: Icons.lightbulb_rounded, text: 'PENJELASAN'),
                     const SizedBox(height: AppSpacing.sm),
                     Text(result.question.explanation, style: AppTextStyles.body),
                   ],
@@ -120,7 +121,13 @@ class QuizFeedbackPage extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(color: AppColors.accentYellow.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppRadius.md)),
-                  child: Text('🔥 Benar ${session.correctStreak}x berturut-turut', style: AppTextStyles.bodyMuted.copyWith(fontWeight: FontWeight.w700)),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.local_fire_department_rounded, size: 18, color: AppColors.accentOrange),
+                      const SizedBox(width: 6),
+                      Text('Benar ${session.correctStreak}x berturut-turut', style: AppTextStyles.bodyMuted.copyWith(fontWeight: FontWeight.w700)),
+                    ],
+                  ),
                 ),
               ],
               if (!isCorrect) ...[
@@ -129,7 +136,13 @@ class QuizFeedbackPage extends ConsumerWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(color: AppColors.accentYellow.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppRadius.md)),
-                  child: Text('❤️ Sisa nyawa: ${session.lives} dari 3', style: AppTextStyles.bodyMuted.copyWith(fontWeight: FontWeight.w700)),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.favorite_rounded, size: 18, color: AppColors.danger),
+                      const SizedBox(width: 6),
+                      Text('Sisa nyawa: ${session.lives} dari 3', style: AppTextStyles.bodyMuted.copyWith(fontWeight: FontWeight.w700)),
+                    ],
+                  ),
                 ),
               ],
               const Spacer(),

@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/app_button.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../data/mock/mock_data.dart';
 import '../../../data/models/user.dart';
 import '../../shared/state/user_providers.dart';
@@ -71,7 +72,7 @@ class ProfilePage extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  Text('🏆 PENCAPAIAN', style: AppTextStyles.labelUppercase),
+                  const SectionLabel(icon: Icons.emoji_events_rounded, text: 'PENCAPAIAN'),
                   const SizedBox(height: AppSpacing.md),
                   GridView.count(
                     crossAxisCount: 3,
@@ -83,46 +84,46 @@ class ProfilePage extends ConsumerWidget {
                     children: badges.map((b) => _BadgeCard(badge: b)).toList(),
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  Text('⚙️ PENGATURAN', style: AppTextStyles.labelUppercase),
+                  const SectionLabel(icon: Icons.settings_rounded, text: 'PENGATURAN'),
                   const SizedBox(height: AppSpacing.md),
                   _ToggleRow(
-                    emoji: '🔔',
+                    icon: Icons.notifications_rounded,
                     title: 'Notifikasi',
                     subtitle: 'Ingatkan waktu belajar',
                     value: user.notificationsEnabled,
                     onChanged: (v) => ref.read(userProvider.notifier).toggleNotifications(v),
                   ),
                   _ToggleRow(
-                    emoji: '🌙',
+                    icon: Icons.dark_mode_rounded,
                     title: 'Mode Gelap',
                     subtitle: 'Hemat baterai',
                     value: user.darkModeEnabled,
                     onChanged: (v) => ref.read(userProvider.notifier).toggleDarkMode(v),
                   ),
-                  _LinkRow(emoji: '🌐', title: 'Bahasa', onTap: () => context.push('/settings/language')),
-                  _LinkRow(emoji: '🔐', title: 'Ubah Kata Sandi', onTap: () => context.push('/settings/password')),
+                  _LinkRow(icon: Icons.language_rounded, title: 'Bahasa', onTap: () => context.push('/settings/language')),
+                  _LinkRow(icon: Icons.lock_rounded, title: 'Ubah Kata Sandi', onTap: () => context.push('/settings/password')),
                   const SizedBox(height: AppSpacing.xl),
-                  Text('🎵 SUARA', style: AppTextStyles.labelUppercase),
+                  const SectionLabel(icon: Icons.graphic_eq_rounded, text: 'SUARA'),
                   const SizedBox(height: AppSpacing.md),
                   _ToggleRow(
-                    emoji: '🎵',
+                    icon: Icons.music_note_rounded,
                     title: 'Musik Latar',
                     value: user.musicEnabled,
                     onChanged: (v) => ref.read(userProvider.notifier).toggleMusic(v),
                   ),
                   _ToggleRow(
-                    emoji: '🔊',
+                    icon: Icons.volume_up_rounded,
                     title: 'Efek Suara',
                     value: user.sfxEnabled,
                     onChanged: (v) => ref.read(userProvider.notifier).toggleSfx(v),
                   ),
-                  _LinkRow(emoji: '🔈', title: 'Volume', onTap: () => _showVolumeSheet(context, ref, user)),
+                  _LinkRow(icon: Icons.volume_down_rounded, title: 'Volume', onTap: () => _showVolumeSheet(context, ref, user)),
                   const SizedBox(height: AppSpacing.xl),
-                  Text('ℹ️ TENTANG', style: AppTextStyles.labelUppercase),
+                  const SectionLabel(icon: Icons.info_rounded, text: 'TENTANG'),
                   const SizedBox(height: AppSpacing.md),
-                  _InfoRow(emoji: '📧', title: 'Email', subtitle: user.email),
-                  _InfoRow(emoji: '📱', title: 'Versi Aplikasi', subtitle: '1.2.0'),
-                  _LinkRow(emoji: '📜', title: 'Syarat & Privasi', onTap: () => context.push('/legal/terms')),
+                  _InfoRow(icon: Icons.email_rounded, title: 'Email', subtitle: user.email),
+                  _InfoRow(icon: Icons.phone_android_rounded, title: 'Versi Aplikasi', subtitle: '1.2.0'),
+                  _LinkRow(icon: Icons.description_rounded, title: 'Syarat & Privasi', onTap: () => context.push('/legal/terms')),
                   const SizedBox(height: AppSpacing.xl),
                   AppButton(
                     label: 'Keluar Akun',
@@ -142,19 +143,13 @@ class ProfilePage extends ConsumerWidget {
   void _confirmLogout(BuildContext context) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Keluar dari akun?'),
-        content: const Text('Kamu perlu masuk lagi untuk melanjutkan belajar.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Batal')),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              context.go('/');
-            },
-            child: Text('Keluar', style: TextStyle(color: AppColors.danger)),
-          ),
-        ],
+      barrierColor: Colors.black.withValues(alpha: 0.62),
+      builder: (ctx) => _LogoutDialog(
+        onCancel: () => Navigator.pop(ctx),
+        onLogout: () {
+          Navigator.pop(ctx);
+          context.go('/');
+        },
       ),
     );
   }
@@ -180,6 +175,166 @@ class ProfilePage extends ConsumerWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _LogoutDialog extends StatelessWidget {
+  final VoidCallback onCancel;
+  final VoidCallback onLogout;
+
+  const _LogoutDialog({required this.onCancel, required this.onLogout});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 36),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 284),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.28),
+                blurRadius: 34,
+                offset: const Offset(0, 18),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(18, 24, 18, 14),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 58,
+                  height: 58,
+                  decoration: BoxDecoration(
+                    color: AppColors.danger.withValues(alpha: 0.16),
+                    borderRadius: BorderRadius.circular(AppRadius.full),
+                  ),
+                  alignment: Alignment.center,
+                  child: Image.asset(
+                    'assets/modal_logout.png',
+                    width: 32,
+                    height: 32,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Keluar dari akun?',
+                  style: AppTextStyles.h2.copyWith(fontSize: 17, fontWeight: FontWeight.w800),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Text.rich(
+                  TextSpan(
+                    text: 'Kamu harus masuk lagi untuk melanjutkan\n',
+                    children: [
+                      const WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(Icons.local_fire_department_rounded,
+                            size: 14, color: AppColors.accentOrange),
+                      ),
+                      TextSpan(
+                        text: ' 7 hari',
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.accentOrange,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const TextSpan(text: ' belajar. Streak tetap aman, kok.'),
+                    ],
+                  ),
+                  style: AppTextStyles.caption.copyWith(height: 1.35),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _LogoutDialogButton(
+                        label: 'BATAL',
+                        foregroundColor: AppColors.ink,
+                        backgroundColor: AppColors.surface,
+                        shadowColor: AppColors.border,
+                        borderColor: AppColors.border,
+                        onPressed: onCancel,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _LogoutDialogButton(
+                        label: 'KELUAR',
+                        foregroundColor: Colors.white,
+                        backgroundColor: const Color(0xFFFF4B4B),
+                        shadowColor: AppColors.dangerDark,
+                        onPressed: onLogout,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LogoutDialogButton extends StatelessWidget {
+  final String label;
+  final Color foregroundColor;
+  final Color backgroundColor;
+  final Color shadowColor;
+  final Color? borderColor;
+  final VoidCallback onPressed;
+
+  const _LogoutDialogButton({
+    required this.label,
+    required this.foregroundColor,
+    required this.backgroundColor,
+    required this.shadowColor,
+    required this.onPressed,
+    this.borderColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 48,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: shadowColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: ElevatedButton(
+            onPressed: onPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: backgroundColor,
+              foregroundColor: foregroundColor,
+              elevation: 0,
+              minimumSize: Size.zero,
+              padding: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: borderColor ?? backgroundColor, width: 1.5),
+              ),
+              textStyle: AppTextStyles.button.copyWith(fontSize: 13, fontWeight: FontWeight.w800),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(label),
+          ),
+        ),
       ),
     );
   }
@@ -222,7 +377,7 @@ class _BadgeCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(badge.emoji, style: const TextStyle(fontSize: 26)),
+              Icon(badge.icon, size: 28, color: AppColors.accentOrange),
               const SizedBox(height: AppSpacing.xs),
               Text(badge.title, style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700), textAlign: TextAlign.center),
               Text(badge.earnedOn, style: AppTextStyles.caption),
@@ -235,13 +390,13 @@ class _BadgeCard extends StatelessWidget {
 }
 
 class _ToggleRow extends StatelessWidget {
-  final String emoji;
+  final IconData icon;
   final String title;
   final String? subtitle;
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  const _ToggleRow({required this.emoji, required this.title, this.subtitle, required this.value, required this.onChanged});
+  const _ToggleRow({required this.icon, required this.title, this.subtitle, required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -252,7 +407,7 @@ class _ToggleRow extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
           child: Row(
             children: [
-              Text(emoji, style: const TextStyle(fontSize: 20)),
+              Icon(icon, size: 22, color: AppColors.inkMuted),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
@@ -273,11 +428,11 @@ class _ToggleRow extends StatelessWidget {
 }
 
 class _LinkRow extends StatelessWidget {
-  final String emoji;
+  final IconData icon;
   final String title;
   final VoidCallback onTap;
 
-  const _LinkRow({required this.emoji, required this.title, required this.onTap});
+  const _LinkRow({required this.icon, required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -291,7 +446,7 @@ class _LinkRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
             child: Row(
               children: [
-                Text(emoji, style: const TextStyle(fontSize: 20)),
+                Icon(icon, size: 22, color: AppColors.inkMuted),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(child: Text(title, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700))),
                 const Icon(Icons.chevron_right_rounded, color: AppColors.inkMuted),
@@ -305,11 +460,11 @@ class _LinkRow extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  final String emoji;
+  final IconData icon;
   final String title;
   final String subtitle;
 
-  const _InfoRow({required this.emoji, required this.title, required this.subtitle});
+  const _InfoRow({required this.icon, required this.title, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -320,7 +475,7 @@ class _InfoRow extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
           child: Row(
             children: [
-              Text(emoji, style: const TextStyle(fontSize: 20)),
+              Icon(icon, size: 22, color: AppColors.inkMuted),
               const SizedBox(width: AppSpacing.md),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

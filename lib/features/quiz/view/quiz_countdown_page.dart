@@ -59,8 +59,12 @@ class _QuizCountdownPageState extends ConsumerState<QuizCountdownPage> {
           ? 'Kamu punya 60 detik untuk menjawab 10 soal. Tetap fokus!'
           : 'Bersiap menjawab soal-soal level ${level.name}.',
       infoPills: isTimeChallenge
-          ? const [LoadingInfoPill(label: '⏱ 60s'), LoadingInfoPill(label: '❤️ 3 nyawa'), LoadingInfoPill(label: '⚡ 2x XP')]
-          : const [LoadingInfoPill(label: '❤️ 3 nyawa')],
+          ? const [
+              LoadingInfoPill(icon: Icons.timer_rounded, label: '60s'),
+              LoadingInfoPill(icon: Icons.favorite_rounded, label: '3 nyawa'),
+              LoadingInfoPill(icon: Icons.bolt_rounded, label: '2x XP'),
+            ]
+          : const [LoadingInfoPill(icon: Icons.favorite_rounded, label: '3 nyawa')],
     );
   }
 }

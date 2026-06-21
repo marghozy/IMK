@@ -5,6 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../data/mock/mock_data.dart';
 import '../../shared/state/user_providers.dart';
 
@@ -62,14 +63,14 @@ class _ProgressPageState extends ConsumerState<ProgressPage> {
               crossAxisSpacing: AppSpacing.md,
               childAspectRatio: 1.6,
               children: [
-                _StatCard(emoji: '🔥', value: '${user.streakDays}', label: 'STREAK AKTIF'),
-                _StatCard(emoji: '🎯', value: '${(MockData.overallAccuracy * 100).round()}%', label: 'AKURASI'),
-                _StatCard(emoji: '📖', value: '${MockData.totalLessonsCompleted}', label: 'PELAJARAN'),
-                _StatCard(emoji: '⚡', value: '${MockData.totalQuizzesCompleted}', label: 'QUIZ SELESAI'),
+                _StatCard(icon: Icons.local_fire_department_rounded, color: AppColors.accentOrange, value: '${user.streakDays}', label: 'STREAK AKTIF'),
+                _StatCard(icon: Icons.gps_fixed_rounded, color: AppColors.primary, value: '${(MockData.overallAccuracy * 100).round()}%', label: 'AKURASI'),
+                _StatCard(icon: Icons.menu_book_rounded, color: AppColors.accentBlue, value: '${MockData.totalLessonsCompleted}', label: 'PELAJARAN'),
+                _StatCard(icon: Icons.bolt_rounded, color: AppColors.accentYellow, value: '${MockData.totalQuizzesCompleted}', label: 'QUIZ SELESAI'),
               ],
             ),
             const SizedBox(height: AppSpacing.xl),
-            Text('📈 AKURASI 7 HARI', style: AppTextStyles.labelUppercase),
+            const SectionLabel(icon: Icons.show_chart_rounded, text: 'AKURASI 7 HARI'),
             const SizedBox(height: AppSpacing.md),
             Card(
               child: Padding(
@@ -116,7 +117,7 @@ class _ProgressPageState extends ConsumerState<ProgressPage> {
               ),
             ),
             const SizedBox(height: AppSpacing.xl),
-            Text('📅 KALENDER ${_monthLabel(_focusedMonth).toUpperCase()}', style: AppTextStyles.labelUppercase),
+            SectionLabel(icon: Icons.calendar_month_rounded, text: 'KALENDER ${_monthLabel(_focusedMonth).toUpperCase()}'),
             const SizedBox(height: AppSpacing.md),
             Card(
               child: Padding(
@@ -171,11 +172,12 @@ class _ProgressPageState extends ConsumerState<ProgressPage> {
 }
 
 class _StatCard extends StatelessWidget {
-  final String emoji;
+  final IconData icon;
+  final Color color;
   final String value;
   final String label;
 
-  const _StatCard({required this.emoji, required this.value, required this.label});
+  const _StatCard({required this.icon, required this.color, required this.value, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +187,7 @@ class _StatCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 22)),
+            Icon(icon, size: 24, color: color),
             Text(value, style: AppTextStyles.h2),
             Text(label, style: AppTextStyles.caption),
           ],
