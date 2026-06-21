@@ -1,52 +1,42 @@
-# JawaLingo
+# JawaLingo (Flutter)
 
-Aplikasi mobile-first untuk belajar Aksara Jawa, dibangun dengan React 18, TypeScript, Vite, dan Tailwind CSS.
+Aplikasi mobile belajar Aksara Jawa — dibangun dengan Flutter, mengikuti pola
+Duolingo (lesson card, quiz, streak, XP). Implementasi ini mencakup scope
+**Tim A** sesuai prototype Figma.
 
-## Menjalankan secara lokal
+## Tech Stack
 
-```bash
-npm install
-npm run dev
-```
+- Flutter (stable) + Dart null-safety
+- State management: `flutter_riverpod` (manual `Notifier`/`NotifierProvider`, tanpa codegen)
+- Navigasi: `go_router`
+- Font: `google_fonts` (Baloo 2 / Nunito untuk Latin, Noto Sans Javanese untuk aksara)
+- Chart: `fl_chart` (akurasi 7 hari)
+- Kalender: `table_calendar` (streak)
+- Tracing aksara: `CustomPainter` + `GestureDetector` (tanpa package signature-pad eksternal)
+- Data: mock/offline saja (tidak ada backend)
 
-Buka `http://localhost:5173` di browser.
-
-## Script
-
-| Script | Deskripsi |
-|---|---|
-| `npm run dev` | Menjalankan dev server (Vite) |
-| `npm run build` | Type-check + build production ke `dist/` |
-| `npm run preview` | Preview hasil build production |
-| `npm run lint` | Menjalankan ESLint |
-| `npm run format` | Memformat kode dengan Prettier |
-
-## Struktur Proyek
-
-```
-src/
-├── assets/       # logo, ilustrasi, font
-├── components/ui/ # komponen UI generik (Button, Input, Card, dst.)
-├── features/      # komponen spesifik domain (auth, quiz, progress, dst.)
-├── layouts/        # AuthLayout, OnboardingLayout, AppLayout
-├── pages/           # 1 file per route
-├── services/         # mock API layer per domain
-├── hooks/             # custom hooks
-├── utils/              # helper functions
-├── types/               # tipe domain TypeScript
-├── constants/             # route paths, nav items, config
-├── routes/                 # definisi React Router
-└── styles/                  # Tailwind & global CSS
-```
-
-## Konfigurasi
-
-Salin `.env.example` ke `.env` jika ingin mengarahkan `apiClient` ke backend nyata:
+## Menjalankan
 
 ```bash
-cp .env.example .env
+flutter pub get
+flutter run
 ```
 
-## Status
+## Struktur
 
-Saat ini seluruh halaman menggunakan mock service (`src/services/`) sehingga aplikasi bisa dijalankan tanpa backend.
+```
+lib/
+├── core/        # theme, router, widget bersama
+├── data/        # models & mock data
+└── features/    # 1 folder per domain (splash, onboarding, auth, home, learn, quiz, progress, profile, ...)
+```
+
+## Scope
+
+**Tim A (lengkap & fungsional):** Splash, Onboarding, Register, Login, Pilih
+Tujuan Harian, Home, Belajar/Lobi, Materi Pembelajaran, Latihan Menulis
+Aksara, Kuis (pilih level, soal, feedback, hasil), Progress Dashboard,
+Profile.
+
+**Tim B (stub "Segera Hadir", tidak dibangun penuh):** Lupa Kata Sandi,
+verifikasi OTP, varian desain Login/Register alternatif.
