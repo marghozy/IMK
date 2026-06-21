@@ -31,35 +31,44 @@ class LoadingView extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.xl),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title.toUpperCase(),
-                  style: AppTextStyles.labelUppercase.copyWith(color: Colors.white, letterSpacing: 1.4),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.xl),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          title.toUpperCase(),
+                          style: AppTextStyles.labelUppercase.copyWith(color: Colors.white, letterSpacing: 1.4),
+                        ),
+                        const SizedBox(height: AppSpacing.xxl),
+                        Container(
+                          width: 140,
+                          height: 140,
+                          decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                          alignment: Alignment.center,
+                          child: centerContent,
+                        ),
+                        const SizedBox(height: AppSpacing.xxl),
+                        Text(
+                          message,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.body.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+                        ),
+                        if (infoPills.isNotEmpty) ...[
+                          const SizedBox(height: AppSpacing.xxl),
+                          Wrap(spacing: AppSpacing.sm, alignment: WrapAlignment.center, children: infoPills),
+                        ]
+                      ],
+                    ),
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.xxl),
-                Container(
-                  width: 140,
-                  height: 140,
-                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                  alignment: Alignment.center,
-                  child: centerContent,
-                ),
-                const SizedBox(height: AppSpacing.xxl),
-                Text(
-                  message,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.body.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
-                ),
-                if (infoPills.isNotEmpty) ...[
-                  const SizedBox(height: AppSpacing.xxl),
-                  Wrap(spacing: AppSpacing.sm, alignment: WrapAlignment.center, children: infoPills),
-                ]
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),

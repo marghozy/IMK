@@ -167,6 +167,48 @@ class MockData {
   static LearningModule moduleById(String id) => modules.firstWhere((m) => m.id == id);
 
   static final Map<QuizLevel, List<QuizQuestion>> quizBank = {
+    QuizLevel.harian: const [
+      QuizQuestion(
+        id: 'h1',
+        aksara: 'ꦏ',
+        prompt: 'Aksara ini dibaca apa?',
+        options: ['Ka', 'Ha', 'Ra', 'Ta'],
+        correctAnswer: 'Ka',
+        explanation: 'Aksara ꦏ dibaca "Ka".',
+      ),
+      QuizQuestion(
+        id: 'h2',
+        aksara: 'ꦢ',
+        prompt: 'Aksara ini dibaca apa?',
+        options: ['Da', 'Ta', 'Sa', 'Pa'],
+        correctAnswer: 'Da',
+        explanation: 'Aksara ꦢ dibaca "Da".',
+      ),
+      QuizQuestion(
+        id: 'h3',
+        aksara: 'ꦱ',
+        prompt: 'Aksara ini dibaca apa?',
+        options: ['Sa', 'Wa', 'La', 'Pa'],
+        correctAnswer: 'Sa',
+        explanation: 'Aksara ꦱ dibaca "Sa".',
+      ),
+      QuizQuestion(
+        id: 'h4',
+        aksara: 'ꦏꦶ',
+        prompt: 'Bagaimana aksara ini dibaca?',
+        options: ['Ka', 'Ki', 'Ku', 'Ke'],
+        correctAnswer: 'Ki',
+        explanation: 'Sandhangan wulu mengubah vokal bawaan "a" pada ꦏ menjadi "i", sehingga dibaca "Ki".',
+      ),
+      QuizQuestion(
+        id: 'h5',
+        aksara: 'ꦮ',
+        prompt: 'Aksara ini dibaca apa?',
+        options: ['Wa', 'Ya', 'Ba', 'Ga'],
+        correctAnswer: 'Wa',
+        explanation: 'Aksara ꦮ dibaca "Wa".',
+      ),
+    ],
     QuizLevel.pemula: const [
       QuizQuestion(
         id: 'q1',

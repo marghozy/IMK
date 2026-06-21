@@ -109,7 +109,7 @@ class _QuizQuestionPageState extends ConsumerState<QuizQuestionPage> {
                       children: [
                         const Icon(Icons.favorite_rounded, size: 14, color: AppColors.danger),
                         const SizedBox(width: 4),
-                        Text('${session.lives}', style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w800)),
+                        Text('${session.lives}/3', style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w800)),
                       ],
                     ),
                   ),

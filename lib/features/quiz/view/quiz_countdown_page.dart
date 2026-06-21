@@ -57,7 +57,9 @@ class _QuizCountdownPageState extends ConsumerState<QuizCountdownPage> {
       centerContent: Text('$_count', style: AppTextStyles.display.copyWith(fontSize: 56, color: const Color(0xFF58CC02))),
       message: isTimeChallenge
           ? 'Kamu punya 60 detik untuk menjawab 10 soal. Tetap fokus!'
-          : 'Bersiap menjawab soal-soal level ${level.name}.',
+          : level == QuizLevel.harian
+              ? 'Bersiap menjawab 5 soal Quiz Harian.'
+              : 'Bersiap menjawab soal-soal level ${level.name}.',
       infoPills: isTimeChallenge
           ? const [
               LoadingInfoPill(icon: Icons.timer_rounded, label: '60s'),
