@@ -6,8 +6,9 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/section_label.dart';
-import '../../../data/mock/mock_data.dart';
+import '../../../data/models/progress_data.dart';
 import '../../shared/state/user_providers.dart';
+import '../state/progress_state.dart';
 
 class ProgressPage extends ConsumerStatefulWidget {
   const ProgressPage({super.key});
@@ -29,8 +30,9 @@ class _ProgressPageState extends ConsumerState<ProgressPage> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
-    final accuracyData = MockData.last7DaysAccuracy();
-    final activeDays = MockData.activeStreakDaysInMonth(_focusedMonth);
+    final snapshot = ref.watch(progressProvider).valueOrNull ?? ProgressSnapshot.empty();
+    final accuracyData = last7DaysAccuracy(snapshot);
+    final activeDays = activeDaysInMonth(snapshot, _focusedMonth);
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -64,9 +66,9 @@ class _ProgressPageState extends ConsumerState<ProgressPage> {
               childAspectRatio: 1.6,
               children: [
                 _StatCard(icon: Icons.local_fire_department_rounded, color: AppColors.accentOrange, value: '${user.streakDays}', label: 'STREAK AKTIF'),
-                _StatCard(icon: Icons.gps_fixed_rounded, color: AppColors.primary, value: '${(MockData.overallAccuracy * 100).round()}%', label: 'AKURASI'),
-                _StatCard(icon: Icons.menu_book_rounded, color: AppColors.accentBlue, value: '${MockData.totalLessonsCompleted}', label: 'PELAJARAN'),
-                _StatCard(icon: Icons.bolt_rounded, color: AppColors.accentYellow, value: '${MockData.totalQuizzesCompleted}', label: 'QUIZ SELESAI'),
+                _StatCard(icon: Icons.gps_fixed_rounded, color: AppColors.primary, value: '${(overallAccuracy(snapshot) * 100).round()}%', label: 'AKURASI'),
+                _StatCard(icon: Icons.menu_book_rounded, color: AppColors.accentBlue, value: '${totalLessonsCompleted(snapshot)}', label: 'PELAJARAN'),
+                _StatCard(icon: Icons.bolt_rounded, color: AppColors.accentYellow, value: '${totalQuizzesCompleted(snapshot)}', label: 'QUIZ SELESAI'),
               ],
             ),
             const SizedBox(height: AppSpacing.xl),

@@ -35,7 +35,6 @@ class LearningModule {
   final int xpReward;
   final bool locked;
   final List<LessonCard> cards;
-  final int completedCards;
 
   const LearningModule({
     required this.id,
@@ -46,8 +45,5 @@ class LearningModule {
     required this.xpReward,
     required this.cards,
     this.locked = false,
-    this.completedCards = 0,
   });
-
-  double get progress => cards.isEmpty ? 0 : completedCards / cards.length;
 }

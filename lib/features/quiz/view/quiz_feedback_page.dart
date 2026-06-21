@@ -6,6 +6,8 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/section_label.dart';
+import '../../../data/models/progress_data.dart';
+import '../../progress/state/progress_state.dart';
 import '../../shared/state/user_providers.dart';
 import '../state/quiz_session_state.dart';
 
@@ -193,6 +195,13 @@ class QuizFeedbackPage extends ConsumerWidget {
   void _goNext(BuildContext context, WidgetRef ref, QuizSessionState session) {
     if (session.isLastQuestion) {
       ref.read(userProvider.notifier).addXp(session.xpEarned);
+      ref.read(progressProvider.notifier).recordQuiz(QuizHistoryEntry(
+            level: session.level.name,
+            correctCount: session.correctCount,
+            totalCount: session.answers.length,
+            xpEarned: session.xpEarned,
+            completedAt: DateTime.now(),
+          ));
       context.go('/quiz/$levelId/result');
     } else {
       ref.read(quizSessionProvider.notifier).nextQuestion();

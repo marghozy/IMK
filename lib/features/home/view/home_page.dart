@@ -9,6 +9,8 @@ import '../../../core/widgets/progress_bar.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/xp_badge.dart';
 import '../../../data/mock/mock_data.dart';
+import '../../../data/models/progress_data.dart';
+import '../../progress/state/progress_state.dart';
 import '../../shared/state/user_providers.dart';
 
 class HomePage extends ConsumerWidget {
@@ -18,6 +20,9 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
     final lastLesson = ref.watch(lastLessonProvider);
+    final snapshot = ref.watch(progressProvider).valueOrNull ?? ProgressSnapshot.empty();
+    final goal = MockData.dailyGoals.firstWhere((g) => g.id == user.dailyGoalId, orElse: () => MockData.dailyGoals.first);
+    final dailyProgress = goal.xpTarget == 0 ? 0.0 : (todayXpEarned(snapshot) / goal.xpTarget).clamp(0, 1).toDouble();
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -117,11 +122,11 @@ class HomePage extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('PROGRESS HARI INI', style: AppTextStyles.labelUppercase),
-                              Text('70%', style: AppTextStyles.h2.copyWith(color: AppColors.primary)),
+                              Text('${(dailyProgress * 100).round()}%', style: AppTextStyles.h2.copyWith(color: AppColors.primary)),
                             ],
                           ),
                           const SizedBox(height: AppSpacing.sm),
-                          const AppProgressBar(value: 0.7),
+                          AppProgressBar(value: dailyProgress),
                         ],
                       ),
                     ),
@@ -136,13 +141,15 @@ class HomePage extends ConsumerWidget {
                   const SectionLabel(icon: Icons.menu_book_rounded, text: 'RECOMMENDED'),
                   const SizedBox(height: AppSpacing.md),
                   ...MockData.modules.take(3).map(
-                        (m) => Padding(
+                        (m) {
+                          final unlocked = isModuleUnlocked(snapshot, m);
+                          return Padding(
                           padding: const EdgeInsets.only(bottom: AppSpacing.md),
                           child: Opacity(
-                            opacity: m.locked ? 0.6 : 1,
+                            opacity: unlocked ? 1 : 0.6,
                             child: InkWell(
                               borderRadius: BorderRadius.circular(AppRadius.md),
-                              onTap: m.locked ? null : () => context.push('/learn/${m.id}'),
+                              onTap: unlocked ? () => context.push('/learn/${m.id}') : null,
                               child: Card(
                                 child: Padding(
                                   padding: const EdgeInsets.all(AppSpacing.md),
@@ -153,7 +160,7 @@ class HomePage extends ConsumerWidget {
                                         height: 48,
                                         decoration: BoxDecoration(color: m.color, borderRadius: BorderRadius.circular(AppRadius.sm)),
                                         alignment: Alignment.center,
-                                        child: m.locked
+                                        child: !unlocked
                                             ? const Icon(Icons.lock_rounded, color: AppColors.inkMuted)
                                             : Text(m.previewAksara, style: AppTextStyles.aksara(size: 22)),
                                       ),
@@ -180,7 +187,8 @@ class HomePage extends ConsumerWidget {
                               ),
                             ),
                           ),
-                        ),
+                        );
+                        },
                       ),
                 ],
               ),

@@ -10,6 +10,10 @@ class UserNotifier extends Notifier<AppUser> {
     state = user;
   }
 
+  void setStreakDays(int days) {
+    state = state.copyWith(streakDays: days);
+  }
+
   void setDailyGoal(String goalId) {
     state = state.copyWith(dailyGoalId: goalId);
   }

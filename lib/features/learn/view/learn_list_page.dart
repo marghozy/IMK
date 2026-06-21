@@ -9,6 +9,8 @@ import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/xp_badge.dart';
 import '../../../data/mock/mock_data.dart';
 import '../../../data/models/module.dart';
+import '../../../data/models/progress_data.dart';
+import '../../progress/state/progress_state.dart';
 import '../../shared/state/user_providers.dart';
 
 class LearnListPage extends ConsumerWidget {
@@ -17,8 +19,11 @@ class LearnListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    final activeModule = MockData.modules.firstWhere((m) => !m.locked && m.completedCards < m.cards.length,
+    final snapshot = ref.watch(progressProvider).valueOrNull ?? ProgressSnapshot.empty();
+    final activeModule = MockData.modules.firstWhere(
+        (m) => isModuleUnlocked(snapshot, m) && snapshot.completedCardCount(m.id) < m.cards.length,
         orElse: () => MockData.modules.first);
+    final activeModuleCompleted = snapshot.completedCardCount(activeModule.id);
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -53,10 +58,10 @@ class LearnListPage extends ConsumerWidget {
                           Text('LANJUTKAN', style: AppTextStyles.labelUppercase.copyWith(color: Colors.white70)),
                           const SizedBox(height: AppSpacing.xs),
                           Text(activeModule.title, style: AppTextStyles.h1.copyWith(color: Colors.white)),
-                          Text('Kartu ${activeModule.completedCards} dari ${activeModule.cards.length}',
+                          Text('Kartu $activeModuleCompleted dari ${activeModule.cards.length}',
                               style: AppTextStyles.body.copyWith(color: Colors.white.withValues(alpha: 0.9))),
                           const SizedBox(height: AppSpacing.md),
-                          AppProgressBar(value: activeModule.progress, color: Colors.white, height: 6),
+                          AppProgressBar(value: moduleProgress(snapshot, activeModule), color: Colors.white, height: 6),
                         ],
                       ),
                     ),
@@ -68,7 +73,7 @@ class LearnListPage extends ConsumerWidget {
             const SizedBox(height: AppSpacing.xl),
             const SectionLabel(icon: Icons.menu_book_rounded, text: 'SEMUA MATERI'),
             const SizedBox(height: AppSpacing.md),
-            ...MockData.modules.map((m) => _ModuleCard(module: m)),
+            ...MockData.modules.map((m) => _ModuleCard(module: m, snapshot: snapshot)),
           ],
         ),
       ),
@@ -78,17 +83,19 @@ class LearnListPage extends ConsumerWidget {
 
 class _ModuleCard extends StatelessWidget {
   final LearningModule module;
-  const _ModuleCard({required this.module});
+  final ProgressSnapshot snapshot;
+  const _ModuleCard({required this.module, required this.snapshot});
 
   @override
   Widget build(BuildContext context) {
+    final unlocked = isModuleUnlocked(snapshot, module);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: Opacity(
-        opacity: module.locked ? 0.6 : 1,
+        opacity: unlocked ? 1 : 0.6,
         child: InkWell(
           borderRadius: BorderRadius.circular(AppRadius.md),
-          onTap: module.locked ? null : () => context.push('/learn/${module.id}'),
+          onTap: unlocked ? () => context.push('/learn/${module.id}') : null,
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
@@ -99,7 +106,7 @@ class _ModuleCard extends StatelessWidget {
                     height: 52,
                     decoration: BoxDecoration(color: module.color, borderRadius: BorderRadius.circular(AppRadius.sm)),
                     alignment: Alignment.center,
-                    child: module.locked
+                    child: !unlocked
                         ? const Icon(Icons.lock_rounded, color: AppColors.inkMuted)
                         : Text(module.previewAksara, style: AppTextStyles.aksara(size: 22)),
                   ),
@@ -110,9 +117,9 @@ class _ModuleCard extends StatelessWidget {
                       children: [
                         Text(module.title, style: AppTextStyles.h2),
                         Text(module.subtitle, style: AppTextStyles.caption),
-                        if (!module.locked && module.cards.isNotEmpty) ...[
+                        if (unlocked && module.cards.isNotEmpty) ...[
                           const SizedBox(height: AppSpacing.xs),
-                          AppProgressBar(value: module.progress, color: module.color, height: 5),
+                          AppProgressBar(value: moduleProgress(snapshot, module), color: module.color, height: 5),
                         ],
                       ],
                     ),

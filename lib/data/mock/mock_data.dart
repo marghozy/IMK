@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/module.dart';
 import '../models/quiz.dart';
-import '../models/progress_entry.dart';
 import '../models/user.dart';
 
 /// Static, realistic dummy data standing in for a future backend.
@@ -43,7 +42,6 @@ class MockData {
       previewAksara: 'ꦤ',
       color: const Color(0xFFB7E4A0),
       xpReward: 50,
-      completedCards: 12,
       cards: const [
         LessonCard(
           id: 'ng-1',
@@ -104,7 +102,6 @@ class MockData {
       previewAksara: 'ꦏꦶ',
       color: const Color(0xFFA5D8F0),
       xpReward: 80,
-      completedCards: 2,
       cards: const [
         LessonCard(
           id: 'sd-1',
@@ -409,21 +406,4 @@ class MockData {
       locked: true,
     ),
   ];
-
-  static List<ProgressEntry> last7DaysAccuracy() {
-    final now = DateTime.now();
-    final values = [0.75, 0.88, 0.92, 0.80, 0.85, 0.90, 0.84];
-    return List.generate(7, (i) {
-      final date = now.subtract(Duration(days: 6 - i));
-      return ProgressEntry(date: date, accuracy: values[i], active: true);
-    });
-  }
-
-  static Set<int> activeStreakDaysInMonth(DateTime month) {
-    return {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-  }
-
-  static const totalLessonsCompleted = 24;
-  static const totalQuizzesCompleted = 12;
-  static const overallAccuracy = 0.84;
 }
