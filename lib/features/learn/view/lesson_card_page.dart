@@ -23,7 +23,6 @@ class LessonCardPage extends ConsumerStatefulWidget {
 class _LessonCardPageState extends ConsumerState<LessonCardPage> {
   late LearningModule _module;
   late int _index;
-  bool _playingAudio = false;
 
   @override
   void initState() {
@@ -39,10 +38,7 @@ class _LessonCardPageState extends ConsumerState<LessonCardPage> {
   }
 
   void _playAudio() {
-    setState(() => _playingAudio = true);
-    Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) setState(() => _playingAudio = false);
-    });
+    context.push('/coming-soon', extra: 'Pelafalan Suara');
   }
 
   @override
@@ -104,10 +100,10 @@ class _LessonCardPageState extends ConsumerState<LessonCardPage> {
                           child: Container(
                             padding: const EdgeInsets.all(AppSpacing.sm),
                             decoration: BoxDecoration(
-                              color: _playingAudio ? AppColors.primary : AppColors.primary.withValues(alpha: 0.12),
+                              color: AppColors.primary.withValues(alpha: 0.12),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(Icons.volume_up_rounded, color: _playingAudio ? Colors.white : AppColors.primary),
+                            child: const Icon(Icons.volume_up_rounded, color: AppColors.primary),
                           ),
                         ),
                         const SizedBox(height: AppSpacing.md),

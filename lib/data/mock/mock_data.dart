@@ -101,7 +101,7 @@ class MockData {
       id: 'sandhangan',
       title: 'Sandhangan',
       subtitle: 'Tanda vokal · 8 aturan',
-      previewAksara: 'ꦶ',
+      previewAksara: 'ꦏꦶ',
       color: const Color(0xFFA5D8F0),
       xpReward: 80,
       completedCards: 2,

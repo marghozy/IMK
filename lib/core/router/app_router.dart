@@ -26,6 +26,10 @@ final appRouter = GoRouter(
     GoRoute(path: '/onboarding/pilih-tujuan', builder: (context, state) => const ChooseGoalPage()),
     GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
     GoRoute(path: '/register', builder: (context, state) => const RegisterPage()),
+    GoRoute(
+      path: '/coming-soon',
+      builder: (context, state) => ComingSoonPage(title: (state.extra as String?) ?? 'Segera Hadir'),
+    ),
     GoRoute(path: '/forgot-password', builder: (context, state) => const ComingSoonPage(title: 'Lupa Kata Sandi')),
     GoRoute(path: '/legal/terms', builder: (context, state) => const ComingSoonPage(title: 'Syarat & Ketentuan')),
     GoRoute(path: '/legal/privacy', builder: (context, state) => const ComingSoonPage(title: 'Kebijakan Privasi')),

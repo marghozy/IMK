@@ -52,7 +52,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text('Selamat Datang', style: AppTextStyles.h1, textAlign: TextAlign.center),
+              SizedBox(
+                width: double.infinity,
+                child: Text('Selamat Datang', style: AppTextStyles.h1, textAlign: TextAlign.center),
+              ),
               const SizedBox(height: AppSpacing.xs),
               Center(child: Text('Masuk untuk lanjut belajar Aksara Jawa', style: AppTextStyles.bodyMuted)),
               const SizedBox(height: AppSpacing.xl),
@@ -98,14 +101,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => context.go('/home'),
+                      onPressed: () => context.push('/coming-soon', extra: 'Masuk dengan Google'),
                       child: const Text('Google'),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () => context.go('/home'),
+                      onPressed: () => context.push('/coming-soon', extra: 'Masuk dengan Apple'),
                       icon: const Icon(Icons.apple, size: 20),
                       label: const Text('Apple'),
                     ),

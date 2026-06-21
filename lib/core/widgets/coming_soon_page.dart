@@ -14,18 +14,20 @@ class ComingSoonPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Center(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.xl),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Icon(Icons.construction_rounded, size: 56, color: AppColors.accentOrange),
               const SizedBox(height: AppSpacing.lg),
               Text('Fitur ini sedang dikembangkan', style: AppTextStyles.h2, textAlign: TextAlign.center),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'Bagian ini di luar cakupan Tim A dan akan tersedia di iterasi berikutnya.',
+                'Tunggu update selanjutnya!',
                 style: AppTextStyles.bodyMuted,
                 textAlign: TextAlign.center,
               ),

@@ -8,13 +8,21 @@ import '../../../core/widgets/app_button.dart';
 import '../../shared/state/user_providers.dart';
 import '../state/quiz_session_state.dart';
 
-class QuizResultPage extends ConsumerWidget {
+class QuizResultPage extends ConsumerStatefulWidget {
   final String levelId;
 
   const QuizResultPage({super.key, required this.levelId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<QuizResultPage> createState() => _QuizResultPageState();
+}
+
+class _QuizResultPageState extends ConsumerState<QuizResultPage> {
+  bool _reviewing = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final levelId = widget.levelId;
     final session = ref.watch(quizSessionProvider);
     final user = ref.watch(userProvider);
 
@@ -134,6 +142,58 @@ class QuizResultPage extends ConsumerWidget {
                         },
                       ),
                     ],
+                    if (_reviewing) ...[
+                      const SizedBox(height: AppSpacing.lg),
+                      Text('ULASAN JAWABAN', style: AppTextStyles.labelUppercase),
+                      const SizedBox(height: AppSpacing.sm),
+                      ...session.answers.asMap().entries.map((e) {
+                        final i = e.key + 1;
+                        final a = e.value;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(AppSpacing.md),
+                            decoration: BoxDecoration(
+                              color: a.isCorrect
+                                  ? AppColors.primary.withValues(alpha: 0.06)
+                                  : AppColors.danger.withValues(alpha: 0.06),
+                              borderRadius: BorderRadius.circular(AppRadius.sm),
+                              border: Border.all(
+                                color: a.isCorrect
+                                    ? AppColors.primary.withValues(alpha: 0.3)
+                                    : AppColors.danger.withValues(alpha: 0.3),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      a.isCorrect ? Icons.check_circle_rounded : Icons.cancel_rounded,
+                                      size: 18,
+                                      color: a.isCorrect ? AppColors.primary : AppColors.danger,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Expanded(
+                                      child: Text('Soal $i: ${a.question.prompt}',
+                                          style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700)),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: AppSpacing.xs),
+                                Text('Jawabanmu: ${a.selectedAnswer}', style: AppTextStyles.bodyMuted),
+                                if (!a.isCorrect)
+                                  Text('Jawaban benar: ${a.question.correctAnswer}', style: AppTextStyles.bodyMuted),
+                                const SizedBox(height: AppSpacing.xs),
+                                Text(a.question.explanation, style: AppTextStyles.caption),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
                     const SizedBox(height: AppSpacing.lg),
                     Row(
                       children: [
@@ -144,19 +204,16 @@ class QuizResultPage extends ConsumerWidget {
                             variant: AppButtonVariant.outline,
                             onPressed: () {
                               ref.read(quizSessionProvider.notifier).reset();
-                              context.go('/home');
+                              context.go('/quiz');
                             },
                           ),
                         ),
                         const SizedBox(width: AppSpacing.md),
                         Expanded(
                           child: AppButton(
-                            label: 'Tinjau',
+                            label: _reviewing ? 'Sembunyikan' : 'Tinjau',
                             icon: Icons.menu_book_rounded,
-                            onPressed: () {
-                              ref.read(quizSessionProvider.notifier).reset();
-                              context.go('/quiz');
-                            },
+                            onPressed: () => setState(() => _reviewing = !_reviewing),
                           ),
                         ),
                       ],

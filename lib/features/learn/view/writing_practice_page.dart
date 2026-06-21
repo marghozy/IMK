@@ -56,7 +56,7 @@ class _WritingPracticePageState extends State<WritingPracticePage> {
                           child: Text(card.aksara, style: AppTextStyles.aksara(size: 160)),
                         ),
                       ),
-                      TracingCanvas(key: _canvasKey),
+                      TracingCanvas(key: _canvasKey, onStrokeChanged: () => setState(() {})),
                     ],
                   ),
                 ),
@@ -76,7 +76,11 @@ class _WritingPracticePageState extends State<WritingPracticePage> {
                   Expanded(
                     child: AppButton(
                       label: 'Selesai',
-                      onPressed: () => context.go('/learn'),
+                      onPressed: (_canvasKey.currentState?.hasStrokes ?? false)
+                          ? () => context.go('/learn')
+                          : () => ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Coba tulis dulu sebelum lanjut')),
+                              ),
                     ),
                   ),
                 ],

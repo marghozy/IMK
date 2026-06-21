@@ -138,39 +138,44 @@ class HomePage extends ConsumerWidget {
                   ...MockData.modules.take(3).map(
                         (m) => Padding(
                           padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(AppRadius.md),
-                            onTap: () => context.push('/learn/${m.id}'),
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(AppSpacing.md),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 48,
-                                      height: 48,
-                                      decoration: BoxDecoration(color: m.color, borderRadius: BorderRadius.circular(AppRadius.sm)),
-                                      alignment: Alignment.center,
-                                      child: Text(m.previewAksara, style: AppTextStyles.aksara(size: 22)),
-                                    ),
-                                    const SizedBox(width: AppSpacing.md),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(m.title, style: AppTextStyles.h2),
-                                          Text(m.subtitle, style: AppTextStyles.caption),
-                                        ],
+                          child: Opacity(
+                            opacity: m.locked ? 0.6 : 1,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(AppRadius.md),
+                              onTap: m.locked ? null : () => context.push('/learn/${m.id}'),
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(AppSpacing.md),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 48,
+                                        height: 48,
+                                        decoration: BoxDecoration(color: m.color, borderRadius: BorderRadius.circular(AppRadius.sm)),
+                                        alignment: Alignment.center,
+                                        child: m.locked
+                                            ? const Icon(Icons.lock_rounded, color: AppColors.inkMuted)
+                                            : Text(m.previewAksara, style: AppTextStyles.aksara(size: 22)),
                                       ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 4),
-                                      decoration: BoxDecoration(
-                                          color: AppColors.accentYellow.withValues(alpha: 0.4),
-                                          borderRadius: BorderRadius.circular(AppRadius.full)),
-                                      child: Text('+${m.xpReward} XP', style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w800)),
-                                    ),
-                                  ],
+                                      const SizedBox(width: AppSpacing.md),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(m.title, style: AppTextStyles.h2),
+                                            Text(m.subtitle, style: AppTextStyles.caption),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 4),
+                                        decoration: BoxDecoration(
+                                            color: AppColors.accentYellow.withValues(alpha: 0.4),
+                                            borderRadius: BorderRadius.circular(AppRadius.full)),
+                                        child: Text('+${m.xpReward} XP', style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w800)),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
