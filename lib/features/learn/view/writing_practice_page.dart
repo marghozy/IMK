@@ -83,9 +83,7 @@ class _WritingPracticePageState extends ConsumerState<WritingPracticePage> {
                               ref.read(progressProvider.notifier).completeCard(widget.moduleId, widget.cardId);
                               context.go('/learn');
                             }
-                          : () => ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Coba tulis dulu sebelum lanjut')),
-                              ),
+                          : null,
                     ),
                   ),
                 ],
