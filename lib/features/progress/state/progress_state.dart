@@ -9,6 +9,11 @@ import '../../../data/repositories/progress_repository.dart';
 import '../../auth/state/auth_session_state.dart';
 import '../../shared/state/user_providers.dart';
 
+/// XP awarded for completing a single lesson card, split evenly across the
+/// module's cards so the whole module nets [LearningModule.xpReward].
+int lessonCardXp(LearningModule module) =>
+    module.cards.isEmpty ? 0 : (module.xpReward / module.cards.length).round();
+
 /// Scoped to the signed-in user's uid so each account's progress is stored
 /// separately in Firestore. Falls back to [LocalProgressRepository] only
 /// while there's no authenticated user yet (e.g. session still restoring),
@@ -28,7 +33,14 @@ class ProgressNotifier extends AsyncNotifier<ProgressSnapshot> {
   Future<ProgressSnapshot> build() => ref.watch(progressRepositoryProvider).load();
 
   Future<void> completeCard(String moduleId, String cardId) async {
-    await ref.read(progressRepositoryProvider).markCardCompleted(moduleId, cardId);
+    final before = state.valueOrNull;
+    final alreadyCompleted = before?.isCardCompleted(moduleId, cardId) ?? false;
+    final module = MockData.modules.firstWhere((m) => m.id == moduleId, orElse: () => MockData.modules.first);
+    final xp = lessonCardXp(module);
+    await ref.read(progressRepositoryProvider).markCardCompleted(moduleId, cardId, xpEarned: xp);
+    if (!alreadyCompleted && xp > 0) {
+      ref.read(userProvider.notifier).addXp(xp);
+    }
     await _refresh();
   }
 
@@ -108,5 +120,9 @@ int computeStreakDays(ProgressSnapshot snapshot) {
 /// against the user's selected [DailyGoal.xpTarget].
 int todayXpEarned(ProgressSnapshot snapshot) {
   final today = dateKey(DateTime.now());
-  return snapshot.quizHistory.where((e) => dateKey(e.completedAt) == today).fold(0, (sum, e) => sum + e.xpEarned);
+  final quizXp =
+      snapshot.quizHistory.where((e) => dateKey(e.completedAt) == today).fold(0, (sum, e) => sum + e.xpEarned);
+  final lessonXp =
+      snapshot.lessonXpHistory.where((e) => dateKey(e.completedAt) == today).fold(0, (sum, e) => sum + e.xpEarned);
+  return quizXp + lessonXp;
 }

@@ -147,7 +147,7 @@ class ProfilePage extends ConsumerWidget {
                     label: 'Keluar Akun',
                     variant: AppButtonVariant.danger,
                     icon: Icons.logout_rounded,
-                    onPressed: () => _confirmLogout(context),
+                    onPressed: () => _confirmLogout(context, user.streakDays),
                   ),
                 ],
               ),
@@ -158,11 +158,12 @@ class ProfilePage extends ConsumerWidget {
     );
   }
 
-  void _confirmLogout(BuildContext context) {
+  void _confirmLogout(BuildContext context, int streakDays) {
     showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.62),
       builder: (ctx) => _LogoutDialog(
+        streakDays: streakDays,
         onCancel: () => Navigator.pop(ctx),
         onLogout: () {
           Navigator.pop(ctx);
@@ -174,10 +175,11 @@ class ProfilePage extends ConsumerWidget {
 }
 
 class _LogoutDialog extends StatelessWidget {
+  final int streakDays;
   final VoidCallback onCancel;
   final VoidCallback onLogout;
 
-  const _LogoutDialog({required this.onCancel, required this.onLogout});
+  const _LogoutDialog({required this.streakDays, required this.onCancel, required this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +238,7 @@ class _LogoutDialog extends StatelessWidget {
                             size: 14, color: AppColors.accentOrange),
                       ),
                       TextSpan(
-                        text: ' 7 hari',
+                        text: ' $streakDays hari',
                         style: AppTextStyles.caption.copyWith(
                           color: AppColors.accentOrange,
                           fontWeight: FontWeight.w800,
@@ -342,13 +344,14 @@ class _StatBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
         child: Column(
           children: [
-            Text(value, style: AppTextStyles.h2.copyWith(color: color)),
-            Text(label, style: AppTextStyles.caption),
+            Text(value, style: AppTextStyles.h2.copyWith(color: color ?? onSurface)),
+            Text(label, style: AppTextStyles.caption.copyWith(color: onSurface.withValues(alpha: 0.6))),
           ],
         ),
       ),
@@ -362,6 +365,7 @@ class _BadgeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
     return Opacity(
       opacity: badge.locked ? 0.45 : 1,
       child: Card(
@@ -372,8 +376,10 @@ class _BadgeCard extends StatelessWidget {
             children: [
               Icon(badge.icon, size: 28, color: AppColors.accentOrange),
               const SizedBox(height: AppSpacing.xs),
-              Text(badge.title, style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700), textAlign: TextAlign.center),
-              Text(badge.earnedOn, style: AppTextStyles.caption),
+              Text(badge.title,
+                  style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700, color: onSurface),
+                  textAlign: TextAlign.center),
+              Text(badge.earnedOn, style: AppTextStyles.caption.copyWith(color: onSurface.withValues(alpha: 0.6))),
             ],
           ),
         ),
@@ -393,6 +399,7 @@ class _ToggleRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: Card(
@@ -400,14 +407,15 @@ class _ToggleRow extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
           child: Row(
             children: [
-              Icon(icon, size: 22, color: AppColors.inkMuted),
+              Icon(icon, size: 22, color: onSurface.withValues(alpha: 0.6)),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700)),
-                    if (subtitle != null) Text(subtitle!, style: AppTextStyles.caption),
+                    Text(title, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, color: onSurface)),
+                    if (subtitle != null)
+                      Text(subtitle!, style: AppTextStyles.caption.copyWith(color: onSurface.withValues(alpha: 0.6))),
                   ],
                 ),
               ),
@@ -429,6 +437,7 @@ class _LinkRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: InkWell(
@@ -439,10 +448,12 @@ class _LinkRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
             child: Row(
               children: [
-                Icon(icon, size: 22, color: AppColors.inkMuted),
+                Icon(icon, size: 22, color: onSurface.withValues(alpha: 0.6)),
                 const SizedBox(width: AppSpacing.md),
-                Expanded(child: Text(title, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700))),
-                const Icon(Icons.chevron_right_rounded, color: AppColors.inkMuted),
+                Expanded(
+                    child: Text(title,
+                        style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, color: onSurface))),
+                Icon(Icons.chevron_right_rounded, color: onSurface.withValues(alpha: 0.6)),
               ],
             ),
           ),
@@ -461,6 +472,7 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: Card(
@@ -468,13 +480,13 @@ class _InfoRow extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
           child: Row(
             children: [
-              Icon(icon, size: 22, color: AppColors.inkMuted),
+              Icon(icon, size: 22, color: onSurface.withValues(alpha: 0.6)),
               const SizedBox(width: AppSpacing.md),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700)),
-                  Text(subtitle, style: AppTextStyles.caption),
+                  Text(title, style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700, color: onSurface)),
+                  Text(subtitle, style: AppTextStyles.caption.copyWith(color: onSurface.withValues(alpha: 0.6))),
                 ],
               ),
             ],

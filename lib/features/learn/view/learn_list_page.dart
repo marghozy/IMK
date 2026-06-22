@@ -24,6 +24,12 @@ class LearnListPage extends ConsumerWidget {
         (m) => isModuleUnlocked(snapshot, m) && snapshot.completedCardCount(m.id) < m.cards.length,
         orElse: () => MockData.modules.first);
     final activeModuleCompleted = snapshot.completedCardCount(activeModule.id);
+    final resumeCard = activeModule.cards.isEmpty
+        ? null
+        : activeModule.cards.firstWhere(
+            (c) => !(snapshot.completedCardsByModule[activeModule.id]?.contains(c.id) ?? false),
+            orElse: () => activeModule.cards.last,
+          );
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -41,7 +47,9 @@ class LearnListPage extends ConsumerWidget {
             const SizedBox(height: AppSpacing.xl),
             InkWell(
               borderRadius: BorderRadius.circular(AppRadius.lg),
-              onTap: () => context.push('/learn/${activeModule.id}'),
+              onTap: () => context.push(resumeCard == null
+                  ? '/learn/${activeModule.id}'
+                  : '/learn/${activeModule.id}/${resumeCard.id}'),
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(AppSpacing.lg),

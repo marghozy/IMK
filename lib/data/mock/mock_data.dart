@@ -134,7 +134,6 @@ class MockData {
       previewAksara: 'ꦢ',
       color: const Color(0xFFD7C5F0),
       xpReward: 100,
-      locked: true,
       cards: const [
         LessonCard(
           id: 'ps-1',

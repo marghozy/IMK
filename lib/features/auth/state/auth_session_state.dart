@@ -10,7 +10,13 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) => FirebaseAuthRep
 /// errors surface via [AsyncValue.error] so pages can show them inline.
 class AuthSessionNotifier extends AsyncNotifier<AppUser?> {
   @override
-  Future<AppUser?> build() => ref.read(authRepositoryProvider).restoreSession();
+  Future<AppUser?> build() async {
+    final user = await ref.read(authRepositoryProvider).restoreSession();
+    if (user != null) {
+      ref.read(userProvider.notifier).setUser(user);
+    }
+    return user;
+  }
 
   Future<void> register({required String name, required String email, required String password}) async {
     state = const AsyncValue.loading();
