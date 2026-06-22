@@ -24,10 +24,10 @@ class AppUser {
     required this.streakDays,
     required this.dailyGoalId,
     required this.badgeIds,
-    this.notificationsEnabled = true,
+    this.notificationsEnabled = false,
     this.darkModeEnabled = false,
-    this.musicEnabled = true,
-    this.sfxEnabled = true,
+    this.musicEnabled = false,
+    this.sfxEnabled = false,
     this.volume = 0.7,
   });
 

@@ -12,6 +12,7 @@ String dateKey(DateTime d) => '${d.year}-${d.month.toString().padLeft(2, '0')}-$
 class LocalProgressRepository implements ProgressRepository {
   static const _completedCardsKey = 'progress_completed_cards_v1';
   static const _quizHistoryKey = 'progress_quiz_history_v1';
+  static const _lessonXpHistoryKey = 'progress_lesson_xp_history_v1';
   static const _activeDaysKey = 'progress_active_days_v1';
 
   @override
@@ -32,18 +33,34 @@ class LocalProgressRepository implements ProgressRepository {
         .map((raw) => QuizHistoryEntry.fromJson(Map<String, dynamic>.from(jsonDecode(raw) as Map)))
         .toList();
 
+    final lessonXpRaw = prefs.getStringList(_lessonXpHistoryKey) ?? const [];
+    final lessonXpHistory = lessonXpRaw
+        .map((raw) => LessonXpEntry.fromJson(Map<String, dynamic>.from(jsonDecode(raw) as Map)))
+        .toList();
+
     final activeDays = (prefs.getStringList(_activeDaysKey) ?? const []).toSet();
 
-    return ProgressSnapshot(completedCardsByModule: completedCardsByModule, quizHistory: quizHistory, activeDays: activeDays);
+    return ProgressSnapshot(
+      completedCardsByModule: completedCardsByModule,
+      quizHistory: quizHistory,
+      lessonXpHistory: lessonXpHistory,
+      activeDays: activeDays,
+    );
   }
 
   @override
-  Future<void> markCardCompleted(String moduleId, String cardId) async {
+  Future<void> markCardCompleted(String moduleId, String cardId, {int xpEarned = 0}) async {
     final prefs = await SharedPreferences.getInstance();
     final snapshot = await load();
+    if (snapshot.isCardCompleted(moduleId, cardId)) return;
     final updated = Map<String, Set<String>>.from(snapshot.completedCardsByModule);
     updated[moduleId] = {...?updated[moduleId], cardId};
     await prefs.setString(_completedCardsKey, jsonEncode(updated.map((k, v) => MapEntry(k, v.toList()))));
+    final updatedLessonXp = [
+      ...snapshot.lessonXpHistory,
+      LessonXpEntry(moduleId: moduleId, cardId: cardId, xpEarned: xpEarned, completedAt: DateTime.now()),
+    ];
+    await prefs.setStringList(_lessonXpHistoryKey, updatedLessonXp.map((e) => jsonEncode(e.toJson())).toList());
     await _markActiveToday(prefs, snapshot.activeDays);
   }
 

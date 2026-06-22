@@ -39,11 +39,16 @@ class FirebaseProgressRepository implements ProgressRepository {
         .map((e) => QuizHistoryEntry.fromJson(Map<String, dynamic>.from(e as Map)))
         .toList();
 
+    final lessonXpRaw = (data['lessonXpHistory'] as List? ?? const [])
+        .map((e) => LessonXpEntry.fromJson(Map<String, dynamic>.from(e as Map)))
+        .toList();
+
     final activeDays = Set<String>.from(data['activeDays'] as List? ?? const []);
 
     return ProgressSnapshot(
       completedCardsByModule: completedCardsByModule,
       quizHistory: historyRaw,
+      lessonXpHistory: lessonXpRaw,
       activeDays: activeDays,
     );
   }
@@ -52,19 +57,25 @@ class FirebaseProgressRepository implements ProgressRepository {
     return _doc.set({
       'completedCardsByModule': snapshot.completedCardsByModule.map((k, v) => MapEntry(k, v.toList())),
       'quizHistory': snapshot.quizHistory.map((e) => e.toJson()).toList(),
+      'lessonXpHistory': snapshot.lessonXpHistory.map((e) => e.toJson()).toList(),
       'activeDays': snapshot.activeDays.toList(),
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
 
   @override
-  Future<void> markCardCompleted(String moduleId, String cardId) async {
+  Future<void> markCardCompleted(String moduleId, String cardId, {int xpEarned = 0}) async {
     final snapshot = await load();
+    if (snapshot.isCardCompleted(moduleId, cardId)) return;
     final updated = Map<String, Set<String>>.from(snapshot.completedCardsByModule);
     updated[moduleId] = {...?updated[moduleId], cardId};
     await _save(ProgressSnapshot(
       completedCardsByModule: updated,
       quizHistory: snapshot.quizHistory,
+      lessonXpHistory: [
+        ...snapshot.lessonXpHistory,
+        LessonXpEntry(moduleId: moduleId, cardId: cardId, xpEarned: xpEarned, completedAt: DateTime.now()),
+      ],
       activeDays: {...snapshot.activeDays, _todayKey()},
     ));
   }
@@ -75,6 +86,7 @@ class FirebaseProgressRepository implements ProgressRepository {
     await _save(ProgressSnapshot(
       completedCardsByModule: snapshot.completedCardsByModule,
       quizHistory: [...snapshot.quizHistory, entry],
+      lessonXpHistory: snapshot.lessonXpHistory,
       activeDays: {...snapshot.activeDays, _todayKey()},
     ));
   }

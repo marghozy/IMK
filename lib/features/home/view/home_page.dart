@@ -13,6 +13,14 @@ import '../../../data/models/progress_data.dart';
 import '../../progress/state/progress_state.dart';
 import '../../shared/state/user_providers.dart';
 
+String _timeGreeting() {
+  final hour = DateTime.now().hour;
+  if (hour < 10) return 'Selamat pagi';
+  if (hour < 15) return 'Selamat siang';
+  if (hour < 18) return 'Selamat sore';
+  return 'Selamat malam';
+}
+
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
@@ -76,7 +84,7 @@ class HomePage extends ConsumerWidget {
                     text: TextSpan(
                       style: AppTextStyles.h1.copyWith(color: Colors.white),
                       children: [
-                        const TextSpan(text: 'Selamat datang, '),
+                        TextSpan(text: '${_timeGreeting()}, '),
                         TextSpan(text: '${user.name.split(' ').first}!', style: const TextStyle(color: AppColors.accentYellow)),
                       ],
                     ),

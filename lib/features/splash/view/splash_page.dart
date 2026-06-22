@@ -12,7 +12,13 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: AppColors.surface,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: AppColors.primaryGradient,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: Stack(
           children: [
             const _AksaraBackdrop(),
@@ -29,7 +35,7 @@ class SplashPage extends StatelessWidget {
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        style: AppTextStyles.display.copyWith(color: AppColors.ink),
+                        style: AppTextStyles.display.copyWith(color: Colors.white),
                         children: [
                           const TextSpan(text: 'Halo,\naku '),
                           TextSpan(
@@ -44,35 +50,44 @@ class SplashPage extends StatelessWidget {
                       'Ayo belajar Aksara Jawa\nbareng gratis & menyenangkan!',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.body
-                          .copyWith(color: AppColors.ink.withValues(alpha: 0.85)),
+                          .copyWith(color: Colors.white.withValues(alpha: 0.9)),
                     ),
                     const Spacer(),
-                    AppButton(
-                      label: 'MULAI — AKU PEMULA',
-                      variant: AppButtonVariant.primary,
-                      onPressed: () => context.go('/onboarding'),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
                     ElevatedButton(
-                      onPressed: () => context.go('/login'),
+                      onPressed: () => context.go('/onboarding'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: AppColors.ink,
+                        backgroundColor: Colors.white,
+                        foregroundColor: AppColors.primary,
                         elevation: 0,
                         minimumSize: const Size.fromHeight(54),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(AppRadius.md),
                         ),
                       ),
+                      child: Text('MULAI — AKU PEMULA',
+                          style: AppTextStyles.button.copyWith(color: AppColors.primary)),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    OutlinedButton(
+                      onPressed: () => context.go('/login'),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white, width: 1.5),
+                        minimumSize: const Size.fromHeight(54),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                        ),
+                      ),
                       child: Text('SUDAH PUNYA AKUN',
-                          style: AppTextStyles.button.copyWith(color: AppColors.ink)),
+                          style: AppTextStyles.button.copyWith(color: Colors.white)),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
                       'Dengan melanjutkan, kamu setuju dengan Syarat & Privasi',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.caption
-                          .copyWith(color: AppColors.ink.withValues(alpha: 0.6)),
+                          .copyWith(color: Colors.white.withValues(alpha: 0.75)),
                     ),
                   ],
                 ),
@@ -94,17 +109,17 @@ class _LogoHeader extends StatelessWidget {
         Container(
           width: 28,
           height: 28,
+          padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
-            color: AppColors.primary,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
-          child: const Icon(Icons.menu_book_rounded,
-              size: 18, color: Colors.white),
+          child: Icon(Icons.menu_book_rounded, size: 16, color: AppColors.primary),
         ),
         const SizedBox(width: AppSpacing.sm),
         Text(
           'JAWALINGO',
-          style: AppTextStyles.h2.copyWith(color: AppColors.ink, letterSpacing: 2),
+          style: AppTextStyles.h2.copyWith(color: Colors.white, letterSpacing: 2),
         ),
       ],
     );
@@ -168,7 +183,7 @@ class _AksaraBackdrop extends StatelessWidget {
                   g.glyph,
                   style: AppTextStyles.aksara(
                     size: g.size,
-                    color: g.color ?? AppColors.primary.withValues(alpha: 0.12),
+                    color: g.color ?? Colors.white.withValues(alpha: 0.3),
                   ),
                 ),
               ),

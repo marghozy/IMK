@@ -26,8 +26,11 @@ class _QuizCountdownPageState extends ConsumerState<QuizCountdownPage> {
   @override
   void initState() {
     super.initState();
-    final level = parseQuizLevel(widget.levelId);
-    ref.read(quizSessionProvider.notifier).start(level);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final level = parseQuizLevel(widget.levelId);
+      ref.read(quizSessionProvider.notifier).start(level);
+    });
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
       if (_count == 1) {
         t.cancel();

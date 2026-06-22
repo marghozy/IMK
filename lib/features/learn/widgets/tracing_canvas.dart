@@ -13,7 +13,22 @@ class TracingCanvas extends StatefulWidget {
 class TracingCanvasState extends State<TracingCanvas> {
   final List<List<Offset>> _strokes = [];
 
-  bool get hasStrokes => _strokes.isNotEmpty;
+  /// Minimum combined stroke length (logical pixels) required before "Selesai"
+  /// is enabled, so a single tap or a tiny accidental scribble doesn't count
+  /// as a completed trace.
+  static const double _minStrokeLength = 60;
+
+  bool get hasStrokes => _totalStrokeLength() >= _minStrokeLength;
+
+  double _totalStrokeLength() {
+    var total = 0.0;
+    for (final stroke in _strokes) {
+      for (var i = 0; i < stroke.length - 1; i++) {
+        total += (stroke[i + 1] - stroke[i]).distance;
+      }
+    }
+    return total;
+  }
 
   void clear() {
     setState(() => _strokes.clear());
@@ -27,6 +42,7 @@ class TracingCanvasState extends State<TracingCanvas> {
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() => _strokes.last.add(details.localPosition));
+    widget.onStrokeChanged?.call();
   }
 
   @override
